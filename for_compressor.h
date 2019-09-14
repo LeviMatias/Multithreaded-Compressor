@@ -6,12 +6,16 @@
 #define TP1_PROJECT_FOR_COMPRESSOR_H
 
 #include <bitset>
+#include <list>
+#include <math.h>
+
 #define BYTES_PER_NUMBER 4;
+#define BITS_IN_BYTE 8;
 
 typedef struct{
     int reference;
     std::string result;
-    char bitSize;
+    char bit_size;
 }compress_result;
 
 // frame of reference compressor
