@@ -8,19 +8,19 @@
 #include <bitset>
 #include <list>
 #include <math.h>
+#include <algorithm>
 #include "compress_result.h"
 
-#define BYTES_PER_NUMBER 4;
-#define BITS_IN_BYTE 8;
+#define BYTES_PER_NUMBER 4
+#define BITS_IN_BYTE 8
 
 // frame of reference compressor
 class FoFCompressor {
     private:
-    void fix_size(string* str, int block_size);
 
     public:
 
-    compress_result compress(string* to_compress, int block_size);
+    CompressResult compress(char* to_compress, int block_size);
 };
 
 

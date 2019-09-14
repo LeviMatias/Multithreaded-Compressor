@@ -5,16 +5,15 @@
 #ifndef TP1_PROJECT_COMPRESS_RESULT_H
 #define TP1_PROJECT_COMPRESS_RESULT_H
 
-#include <array>
+#include <vector>
 
-class compress_result {
+class CompressResult {
     public:
     int reference;
     char bit_size;
-    std:array<char> packed_bytes;
+    std::vector<char> packed_bytes;
 
-    public:
-    void set(int reference, char bit_size, std:array<char> packed_bytes);
+    void set(int reference, char bit_size, std::vector<char> packed_bytes);
     void release();
 };
 

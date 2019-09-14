@@ -4,10 +4,15 @@
 
 #include "for_compressor.h"
 
-int find_max(int* nums, int block_size){
+static bool abs_compare(int a, int b)
+{
+    return (std::abs(a) < std::abs(b));
+}
+
+int find_max(std::list<int> &nums){
     //max is lost, lets find him
-    auto it = std::max_element(nums->front(), nums->end());
-    return it*;
+    auto it = std::max_element(std::begin(nums), std::end(nums));
+    return *it;
 }
 
 int count_bits(unsigned int n){
@@ -24,21 +29,23 @@ int find_bits_to_represent_n(std::list<int> &nums){
 }
 
 int find_min(std::list<int> &nums){
-    auto it = std::min_element(nums.front(), nums.end());
-    return it*;
+    auto it = std::min_element(std::begin(nums), std::end(nums));
+    return *it;
 }
 
 int sub_smallest(std::list<int> &nums){
     int min = find_min(nums);
-    std::for_each(nums.begin(), nums.end(), [](int &n){ n -= min; });
+    std::for_each(nums.begin(), nums.end(), [min](int &n){ n -= min; });
     return min;
 }
 
-void fill_int_list(std::list<int> &list, string* source){
-    for (int i=0; i<(source->length() - 1)); i+= BYTES_PER_NUMBER){
-        int v = source[i];
+int fill_int_list(std::list<int> &list, char* source){
+    int i;
+    for (i=0; source[i] != '\0' ; i+= BYTES_PER_NUMBER){
+        int v = (int)source[i];
         list.push_front(v);
     }
+    return i/BYTES_PER_NUMBER;
 }
 
 char make_mask(int n){
@@ -51,22 +58,19 @@ char make_mask(int n){
     return mask;
 }
 
-int move_bits(char &dest, char &source,int bits){
-
-}
-
-std:array<char> pack(std::list<int> &nums, int bit_size){
+std::vector<char> pack(std::list<int> &nums, int &bit_size){
     //assume: max variance is of 8 bits
-    const int size = ceil((bitsize*nums.size())/BITS_IN_BYTE);
-    std:array<char, size> bytes = {0};
+    const int size = ceil(bit_size*nums.size()/BITS_IN_BYTE);
+    std::vector<char> bytes_v (size, 0);
     int free_bits = BITS_IN_BYTE;
     int j = 0;
 
-    std::for_each(nums.begin(), nums.end(), [](int &n){
+    std::for_each(nums.begin(), nums.end(),[&](int &n){
         int bits_to_move = bit_size;
+        char nc = (char)n;
         while(bits_to_move > 0){
-            int bits_moved = min(free_bits, bits_to_move);
-            bytes[j] | ((*n & mask) << (free_bits - bits_moved));
+            int bits_moved = std::min(free_bits, bits_to_move);
+            bytes_v[j] | (n << (free_bits - bits_moved));
 
             free_bits -= bits_moved;
             bits_to_move -= bits_moved;
@@ -77,19 +81,20 @@ std:array<char> pack(std::list<int> &nums, int bit_size){
         }
     }
     );
-    return bytes;
+    return bytes_v;
 }
 
 
-compress_result FoFCompressor::compress(string* to_compress, int block_size){
-    if (to_compress->length() < (block_size * BYTES_PER_NUMBER)) {
-        fix_size(to_compress, block_size);//fill with zeroes
-    }
+CompressResult FoFCompressor::compress(char* to_compress, int block_size){
+    //if (to_compress->length() < (block_size * BYTES_PER_NUMBER)) {
+        //fix_size(to_compress, block_size);//fill with zeroes
+    //}
     std::list<int> nums;
     fill_int_list(nums, to_compress);
     int reference = sub_smallest(nums);
     int bit_size = find_bits_to_represent_n(nums);
-    std:array<char> packed_bytes = pack(nums, bit_size);
-    compress_result result;
+    std::vector<char> packed_bytes = pack(nums, bit_size);
+    CompressResult result;
     result.set(reference, bit_size, packed_bytes);
+    return result;
 }

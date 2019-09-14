@@ -4,12 +4,12 @@
 
 #include "compress_result.h"
 
-void compress_result::set(int reference, char bit_size, std:array<char> packed_bytes){
+void CompressResult::set(int reference, char bit_size, std::vector<char> packed_bytes){
     this->reference = reference;
     this->bit_size = bit_size;
     this->packed_bytes = packed_bytes;
 }
 
-void compress_result::release(){
+void CompressResult::release(){
     //nothing to release
 }

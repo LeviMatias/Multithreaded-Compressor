@@ -13,13 +13,11 @@ class ProtectedFile {
     std::fstream file;
 
     public:
-    void init();
-    int open(string path);
-    int read(string* buffer);
-    int write(string* data);
+    int open(std::string path);
+    int read(char* buffer, int size);
+    int write(char* buffer, int size);
     bool eof();
     void close();
-    void release();
 };
 
 

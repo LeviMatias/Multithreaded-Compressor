@@ -4,25 +4,21 @@
 
 #include "protected_file.h"
 
-void ProtectedFile::init(){
-    // nothing to init
-}
-
-int ProtectedFile::open(string path){
+int ProtectedFile::open(std::string path){
     this->file.open(path, std::fstream::in | std::fstream::out);
     return 0;
 }
 
-int ProtectedFile::read(string* buffer){
+int ProtectedFile::read(char* buffer, int size){
     m.lock();
-    this->file.getline(buffer);
+    this->file.read(buffer, size);
     m.unlock();
     return 0;
 }
 
-int ProtectedFile::write(string* data){
+int ProtectedFile::write(char* buffer, int size){
     m.lock();
-    this->file << data;
+    this->file.write(buffer, size);
     m.unlock();
     return 0;
 }
@@ -33,8 +29,4 @@ bool ProtectedFile::eof(){
 
 void ProtectedFile::close(){
     this->file.close();
-}
-
-void ProtectedFile::release(){
-    //nothing to release
 }
