@@ -8,15 +8,10 @@
 #include <bitset>
 #include <list>
 #include <math.h>
+#include "compress_result.h"
 
 #define BYTES_PER_NUMBER 4;
 #define BITS_IN_BYTE 8;
-
-typedef struct{
-    int reference;
-    std::string result;
-    char bit_size;
-}compress_result;
 
 // frame of reference compressor
 class FoFCompressor {
@@ -25,7 +20,7 @@ class FoFCompressor {
 
     public:
 
-    void compress(string* to_compress, int block_size);
+    compress_result compress(string* to_compress, int block_size);
 };
 
 
