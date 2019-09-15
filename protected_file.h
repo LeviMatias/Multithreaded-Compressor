@@ -6,18 +6,24 @@
 #define TP1_PROJECT_PROTECTED_FILE_H
 #include <fstream>
 #include <mutex>
+#include <condition_variable>
 
 class ProtectedFile {
     private:
     std::mutex m;
+    std::condition_variable cv;
     std::fstream file;
+    int access_points;
+    int current_access;
 
     public:
+    void init(int access_ppints);
     int open(std::string path);
-    int read(char* buffer, int size);
+    int read(char* buffer, int size, int port);
     int write(char* buffer, int size);
     bool eof();
     void close();
+    void release();
 };
 
 

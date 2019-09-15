@@ -7,7 +7,8 @@ int main() {
     ofile.open("oneblk");
     FoFCompressor compressor;
     char blk[16];
-    ofile.read(blk, 16);
+    ofile.init(1);
+    ofile.read(blk, 16, 0);
     CompressResult r = compressor.compress(blk, 16, 4);
     ofile.close();
     r.print_to_cout();

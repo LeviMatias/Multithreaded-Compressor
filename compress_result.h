@@ -13,6 +13,12 @@ class CompressResult {
     public:
     int reference;
     char bit_size;
+    //problem: bitset needs compile time size
+    //bitset and vector<bool> are not containers so
+    //the passing needs to be done bit to bit
+    //neither guarantee elements are next to each other
+    //solution vector char can receive multiple bits through masking
+    //con: harder to print to cout
     std::vector<char> packed_bytes;
 
     void set(int reference, char bit_size, std::vector<char> packed_bytes);
