@@ -2,8 +2,8 @@
 // Created by Matias on 12/09/2019.
 //
 
-#ifndef TP1_PROJECT_PROTECTED_FILE_H
-#define TP1_PROJECT_PROTECTED_FILE_H
+#ifndef TP1_PROJECT_SAFE_FILE_H
+#define TP1_PROJECT_SAFE_FILE_H
 #include <fstream>
 #include <mutex>
 #include <condition_variable>
@@ -17,8 +17,8 @@ class ProtectedFile {
     int current_access;
 
     public:
-    void init(int access_ppints);
-    int open(std::string path);
+    void init(int access_points);
+    int open(const std::string& path);
     int read(char* buffer, int size, int port);
     int write(char* buffer, int size);
     bool eof();
@@ -27,4 +27,4 @@ class ProtectedFile {
 };
 
 
-#endif //TP1_PROJECT_PROTECTED_FILE_H
+#endif //TP1_PROJECT_SAFE_FILE_H

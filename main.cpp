@@ -1,5 +1,5 @@
 #include <iostream>
-#include "protected_file.h"
+#include "safe_file.h"
 #include "for_compressor.h"
 
 int main() {

@@ -2,21 +2,21 @@
 // Created by Matias on 12/09/2019.
 //
 
-#include "protected_file.h"
+#include "safe_file.h"
 
-void ProtectedFile::init(int access_points) {
-    this->access_points = access_points;
+void ProtectedFile::init(int acs_points) {
+    this->access_points = acs_points;
     this->current_access = 0;
 }
 
-int ProtectedFile::open(std::string path){
+int ProtectedFile::open(const std::string& path){
     this->file.open(path, std::fstream::in | std::fstream::out);
     return 0;
 }
 
 int ProtectedFile::read(char* buffer, int size, int port){
     std::unique_lock<std::mutex> lock(this->m);
-    while (this->current_access != port) cv.wait(lock);
+    while (this->current_access != port) this->cv.wait(lock);
 
     this->file.read(buffer, size);
     this->current_access++;
