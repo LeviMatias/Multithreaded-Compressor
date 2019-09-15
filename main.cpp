@@ -6,9 +6,10 @@ int main() {
     ProtectedFile ofile;
     ofile.open("oneblk");
     FoFCompressor compressor;
-    char blk[16+1] = {'\0'};
+    char blk[16];
     ofile.read(blk, 16);
-    CompressResult r = compressor.compress(blk, 4);
+    CompressResult r = compressor.compress(blk, 16, 4);
     ofile.close();
+    r.print_to_cout();
     return 0;
 }

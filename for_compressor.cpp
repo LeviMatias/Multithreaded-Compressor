@@ -17,7 +17,8 @@ int find_max(std::list<int> &nums){
 
 int count_bits(unsigned int n){
     unsigned int count = 0;
-    while (n >>= 1){
+    while (n){
+        n = n >> 1;
         count++;
     }
     return count;
@@ -39,10 +40,13 @@ int sub_smallest(std::list<int> &nums){
     return min;
 }
 
-int fill_int_list(std::list<int> &list, char* source){
+int fill_int_list(std::list<int> &list, char* source,  int source_size){
     int i;
-    for (i=0; source[i] != '\0' ; i+= BYTES_PER_NUMBER){
-        int v = (int)source[i];
+    printf("swaperino");
+    for (i=0;  i < (source_size) ; i+= BYTES_PER_NUMBER){
+        //int* ptr = (int*)(source + i);
+        //int v = (int)ntohl(*ptr);
+        int v = (int)*(source + i + 3);
         list.push_front(v);
     }
     return i/BYTES_PER_NUMBER;
@@ -70,7 +74,8 @@ std::vector<char> pack(std::list<int> &nums, int &bit_size){
         char nc = (char)n;
         while(bits_to_move > 0){
             int bits_moved = std::min(free_bits, bits_to_move);
-            bytes_v[j] | (n << (free_bits - bits_moved));
+            nc = (nc << (free_bits - bits_moved));
+            bytes_v[j] = bytes_v[j] | nc;
 
             free_bits -= bits_moved;
             bits_to_move -= bits_moved;
@@ -85,12 +90,12 @@ std::vector<char> pack(std::list<int> &nums, int &bit_size){
 }
 
 
-CompressResult FoFCompressor::compress(char* to_compress, int block_size){
+CompressResult FoFCompressor::compress(char* to_compress, int source_size, int block_size){
     //if (to_compress->length() < (block_size * BYTES_PER_NUMBER)) {
         //fix_size(to_compress, block_size);//fill with zeroes
     //}
     std::list<int> nums;
-    fill_int_list(nums, to_compress);
+    fill_int_list(nums, to_compress, source_size);
     int reference = sub_smallest(nums);
     int bit_size = find_bits_to_represent_n(nums);
     std::vector<char> packed_bytes = pack(nums, bit_size);

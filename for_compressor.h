@@ -20,7 +20,7 @@ class FoFCompressor {
 
     public:
 
-    CompressResult compress(char* to_compress, int block_size);
+    CompressResult compress(char* to_compress, int source_size, int block_size);
 };
 
 

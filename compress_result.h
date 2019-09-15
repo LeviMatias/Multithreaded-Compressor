@@ -6,6 +6,8 @@
 #define TP1_PROJECT_COMPRESS_RESULT_H
 
 #include <vector>
+#include <string>
+#include <iostream>
 
 class CompressResult {
     public:
@@ -14,6 +16,7 @@ class CompressResult {
     std::vector<char> packed_bytes;
 
     void set(int reference, char bit_size, std::vector<char> packed_bytes);
+    void print_to_cout();
     void release();
 };
 
