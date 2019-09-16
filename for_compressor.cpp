@@ -75,7 +75,7 @@ std::vector<char> pack(std::list<int> &nums, int &bit_size){
 }
 
 
-void FoRCompressor::compress(CompressResult* r, char* to_compress,\
+void FoRCompressor::compress(CompressResult* &r, char* to_compress,\
                             int source_size, int block_size){
     //if (to_compress->length() < (block_size * BYTES_PER_NUMBER)) {
         //fix_size(to_compress, block_size);//fill with zeroes

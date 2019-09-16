@@ -25,9 +25,8 @@ void safe_queue_list::init_full(int nqueues, int max_elements) {
 void safe_queue_list::add_element(int queue_id, CompressResult result) {
     //other option is to encapsulate q in another class that enforces limit
     std::unique_lock<std::mutex> lock(this->m2);
-    std::queue<CompressResult> q = this->queues[queue_id];
-    while (q.size() == this->max_elements) this->put_cv.wait(lock);
-    q.push(result);
+    while (this->queues.at(queue_id).size() == this->max_elements) this->put_cv.wait(lock);
+    this->queues.at(queue_id).push(result);
     get_cv.notify_all();
     result.print_to_cout();
     //lock gets released by destructor
@@ -35,18 +34,22 @@ void safe_queue_list::add_element(int queue_id, CompressResult result) {
 
 int safe_queue_list::get_element(int queue_id, CompressResult* &elem) {
     std::unique_lock<std::mutex> lock(this->m);
-    std::queue<CompressResult> q = this->queues.at(queue_id);
-    while (q.empty()) {
+    while (this->queues.at(queue_id).empty()) {
         if (all_queues_closed()) return 1;
         this->get_cv.wait(lock);
     }
 
-
-    *elem = CompressResult(q.front());
-    this->queues[queue_id].pop();
-    put_cv.notify_all();
+    elem = &(this->queues.at(queue_id).front());
     return 0;
 }
+
+void safe_queue_list::pop_element(int queue_id) {
+    if (!this->queues.at(queue_id).empty()){
+        this->queues.at(queue_id).pop();
+        put_cv.notify_all();
+    }
+}
+
 
 void safe_queue_list::close_queue(int queue_id) {
     this->closed_qs++;

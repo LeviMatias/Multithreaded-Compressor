@@ -21,9 +21,11 @@ void worker_thread::run(ProtectedFile &ifile, safe_queue_list &work_qs,\
             if (s == 0){
                 FoRCompressor::compress(res, blk, 16, 4);
                 process_qs.add_element(this->id, *res);
+                work_qs.pop_element(this->id);
             }
         }
     }
+    work_qs.close_queue(this->id);
 }
 
 void worker_thread::join() {
