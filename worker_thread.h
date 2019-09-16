@@ -12,14 +12,15 @@
 #include "safe_queue_list.h"
 
 class worker_thread {
-    private:
+    public:
     std::thread thread;
     int id;
-
+    void _run(ProtectedFile &ifile, safe_queue_list &work_qs,\
+                        safe_queue_list &process_qs, size_t block_size);
     public:
     explicit worker_thread(int id);
     void run(ProtectedFile &ifile, safe_queue_list &work_qs,\
-                        safe_queue_list &process_qs, int block_size);
+                        safe_queue_list &process_qs, size_t block_size);
     void join();
 
 };

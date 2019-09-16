@@ -9,9 +9,19 @@ worker_thread::worker_thread(int id) {
 }
 
 void worker_thread::run(ProtectedFile &ifile, safe_queue_list &work_qs,\
-                        safe_queue_list &process_qs, int block_size){
+                        safe_queue_list &process_qs, size_t block_size){
+    this->thread = std::thread(&worker_thread::_run, this, std::ref(ifile),\
+    std::ref(work_qs), std::ref(process_qs), block_size);
+}
+
+void worker_thread::join() {
+    this->thread.join();
+}
+
+void worker_thread::_run(ProtectedFile &ifile, safe_queue_list &work_qs,\
+                        safe_queue_list &process_qs, size_t block_size) {
     int r = 0;
-    int size = block_size * BYTES_PER_NUMBER;
+    size_t size = block_size * BYTES_PER_NUMBER;
     while (r == 0){
         char blk[size];
         r = ifile.read(blk, size, this->id);
@@ -27,8 +37,4 @@ void worker_thread::run(ProtectedFile &ifile, safe_queue_list &work_qs,\
         }
     }
     work_qs.close_queue(this->id);
-}
-
-void worker_thread::join() {
-    this->thread.join();
 }

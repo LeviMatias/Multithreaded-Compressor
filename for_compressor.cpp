@@ -11,7 +11,7 @@ namespace {
         return *it;
     }
 
-    int count_bits(uint32_t n) {
+    unsigned int count_bits(uint32_t n) {
         unsigned int count = 0;
         while (n) {
             n = n >> 1;
@@ -20,7 +20,7 @@ namespace {
         return count;
     }
 
-    int find_bits_to_represent_n(std::list<uint32_t> &nums) {
+    unsigned int find_bits_to_represent_n(std::list<uint32_t> &nums) {
         unsigned int max = find_max(nums);
         return count_bits(max);
     }
@@ -78,7 +78,7 @@ namespace {
 }
 
 void FoRCompressor::compress(CompressResult* &r, char* to_compress,\
-                            int source_size, int block_size){
+                            size_t source_size, size_t block_size){
     //if (to_compress->length() < (block_size * BYTES_PER_NUMBER)) {
         //fix_size(to_compress, block_size);//fill with zeroes
     //}

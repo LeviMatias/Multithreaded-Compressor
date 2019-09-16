@@ -21,7 +21,7 @@ class FoRCompressor {
     public:
 
     static void compress(CompressResult* &r, char* to_compress,\
-                            int source_size, int block_size);
+                            size_t source_size, size_t block_size);
 };
 
 

@@ -15,7 +15,7 @@ int main() {
 
     worker_thread w(0);
     w.run(ifile, work_qs, process_qs, 4);
-
+    w.join();
     ifile.close();
     return 0;
 }

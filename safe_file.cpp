@@ -14,7 +14,7 @@ int ProtectedFile::open(const std::string& path){
     return 0;
 }
 
-int ProtectedFile::read(char* buffer, int size, int port){
+int ProtectedFile::read(char* buffer, size_t size, int port){
     std::unique_lock<std::mutex> lock(this->m);
     while (this->current_access != port) this->cv.wait(lock);
     int s = 0;
@@ -29,7 +29,7 @@ int ProtectedFile::read(char* buffer, int size, int port){
     return s;
 }
 
-int ProtectedFile::write(char* buffer, int size){
+int ProtectedFile::write(char* buffer, size_t size){
     m.lock();
     this->file.write(buffer, size);
     m.unlock();

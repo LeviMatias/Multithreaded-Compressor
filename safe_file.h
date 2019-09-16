@@ -19,8 +19,8 @@ class ProtectedFile {
     public:
     void init(int access_points);
     int open(const std::string& path);
-    int read(char* buffer, int size, int port);
-    int write(char* buffer, int size);
+    int read(char* buffer, size_t size, int port);
+    int write(char* buffer, size_t size);
     bool eof();
     void close();
     void release();
