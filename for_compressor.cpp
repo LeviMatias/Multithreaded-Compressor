@@ -4,11 +4,6 @@
 
 #include "for_compressor.h"
 
-static bool abs_compare(int a, int b)
-{
-    return (std::abs(a) < std::abs(b));
-}
-
 int find_max(std::list<int> &nums){
     //max is lost, lets find him
     auto it = std::max_element(std::begin(nums), std::end(nums));
@@ -52,16 +47,6 @@ int fill_int_list(std::list<int> &list, char* source,  int source_size){
     return i/BYTES_PER_NUMBER;
 }
 
-char make_mask(int n){
-    char mask = 0;
-    for (int i=0; i<n; i++){
-        mask++;// turns first bit
-        mask<<1;//pushes it
-    }
-    mask++;//turns first bit
-    return mask;
-}
-
 std::vector<char> pack(std::list<int> &nums, int &bit_size){
     //assume: max variance is of 8 bits
     const int size = ceil(bit_size*nums.size()/BITS_IN_BYTE);
@@ -90,7 +75,8 @@ std::vector<char> pack(std::list<int> &nums, int &bit_size){
 }
 
 
-CompressResult FoFCompressor::compress(char* to_compress, int source_size, int block_size){
+void FoRCompressor::compress(CompressResult* r, char* to_compress,\
+                            int source_size, int block_size){
     //if (to_compress->length() < (block_size * BYTES_PER_NUMBER)) {
         //fix_size(to_compress, block_size);//fill with zeroes
     //}
@@ -99,7 +85,5 @@ CompressResult FoFCompressor::compress(char* to_compress, int source_size, int b
     int reference = sub_smallest(nums);
     int bit_size = find_bits_to_represent_n(nums);
     std::vector<char> packed_bytes = pack(nums, bit_size);
-    CompressResult result;
-    result.set(reference, bit_size, packed_bytes);
-    return result;
+    r->set(reference, bit_size, packed_bytes);
 }

@@ -15,12 +15,13 @@
 #define BITS_IN_BYTE 8
 
 // frame of reference compressor
-class FoFCompressor {
+class FoRCompressor {
     private:
 
     public:
 
-    CompressResult compress(char* to_compress, int source_size, int block_size);
+    static void compress(CompressResult* r, char* to_compress,\
+                            int source_size, int block_size);
 };
 
 

@@ -14,21 +14,27 @@
 
 class safe_queue_list {
     private:
-    int max_elements;
-    int number_of_qs;
-    int current_q;
-    int closed_qs;
+    unsigned int max_elements;
+    unsigned int number_of_qs;
+    unsigned int closed_qs;
 
     std::mutex m;
     std::mutex m2;
     std::condition_variable get_cv;
     std::condition_variable put_cv;
+    //replace with map
     std::vector<std::queue<CompressResult>> queues;
 
     public:
     void init(int number_of_queues, int max_elements);
-    void add_element(int queue_id, CompressResult &result);
-    CompressResult* get_element(int queue_id);
+    void init_full(int number_of_queues, int max_elements);
+    void add_element(int queue_id, CompressResult result);
+    //if successful elem points to element
+    //0 if s -1 if not
+    int get_element(int queue_id, CompressResult* &elem);
+    //pops element in queue
+    //because each thread has its own queue, no protection is needed
+    void pop_element(int queue_id);
     void close_queue(int queue_id);
     bool all_queues_closed();
     void release();

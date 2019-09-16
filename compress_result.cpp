@@ -4,10 +4,28 @@
 
 #include "compress_result.h"
 
-void CompressResult::set(int reference, char bit_size, std::vector<char> packed_bytes){
-    this->reference = reference;
-    this->bit_size = bit_size;
-    this->packed_bytes = packed_bytes;
+#include <utility>
+
+CompressResult::CompressResult() {
+    this->bit_size = 0;
+    this->reference = 0;
+    this->packed_bytes = std::vector<char>();
+}
+
+CompressResult::CompressResult(const CompressResult &old_obj) {
+    this->packed_bytes = std::vector<char>(old_obj.packed_bytes);
+    this->reference = old_obj.reference;
+    this->bit_size = old_obj.bit_size;
+}
+
+std::vector<char>& CompressResult::get_packed_bytes(){
+    return this->packed_bytes;
+}
+
+void CompressResult::set(int ref, char bs, std::vector<char> &pb){
+    this->reference = ref;
+    this->bit_size = bs;
+    this->packed_bytes = std::move(pb);
 }
 
 void CompressResult::print_to_cout() {

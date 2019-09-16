@@ -10,7 +10,7 @@
 #include <iostream>
 
 class CompressResult {
-    public:
+    private:
     int reference;
     char bit_size;
     //problem: bitset needs compile time size
@@ -21,9 +21,14 @@ class CompressResult {
     //con: harder to print to cout
     std::vector<char> packed_bytes;
 
-    void set(int reference, char bit_size, std::vector<char> packed_bytes);
+    public:
+    CompressResult();
+    CompressResult(const CompressResult &old_obj);
+    void set(int reference, char bit_size, std::vector<char> &packed_bytes);
     void print_to_cout();
     void release();
+
+    std::vector<char> &get_packed_bytes();
 };
 
 
