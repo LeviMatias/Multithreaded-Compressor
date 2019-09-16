@@ -9,17 +9,18 @@ worker_thread::worker_thread(int id) {
 }
 
 void worker_thread::run(ProtectedFile &ifile, safe_queue_list &work_qs,\
-                        safe_queue_list &process_qs) {
+                        safe_queue_list &process_qs, int block_size){
     int r = 0;
+    int size = block_size * BYTES_PER_NUMBER;
     while (r == 0){
-        char blk[16];
-        r = ifile.read(blk, 16, this->id);
+        char blk[size];
+        r = ifile.read(blk, size, this->id);
         if (r == 0){
-            //gets( or waits for) free cr
             CompressResult* res;
+            //gets( or waits for) free cr
             int s = work_qs.get_element(this->id, res);
             if (s == 0){
-                FoRCompressor::compress(res, blk, 16, 4);
+                FoRCompressor::compress(res, blk, size, block_size);
                 process_qs.add_element(this->id, *res);
                 work_qs.pop_element(this->id);
             }

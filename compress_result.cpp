@@ -9,20 +9,16 @@
 CompressResult::CompressResult() {
     this->bit_size = 0;
     this->reference = 0;
-    this->packed_bytes = std::vector<char>();
+    this->packed_bytes = std::vector<unsigned char>();
 }
 
 CompressResult::CompressResult(const CompressResult &old_obj) {
-    this->packed_bytes = std::vector<char>(old_obj.packed_bytes);
+    this->packed_bytes = std::vector<unsigned char>(old_obj.packed_bytes);
     this->reference = old_obj.reference;
     this->bit_size = old_obj.bit_size;
 }
 
-std::vector<char>& CompressResult::get_packed_bytes(){
-    return this->packed_bytes;
-}
-
-void CompressResult::set(int ref, char bs, std::vector<char> &pb){
+void CompressResult::set(int ref, char bs, std::vector<unsigned char> &pb){
     this->reference = ref;
     this->bit_size = bs;
     this->packed_bytes = std::move(pb);

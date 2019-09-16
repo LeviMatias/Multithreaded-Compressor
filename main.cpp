@@ -14,7 +14,7 @@ int main() {
     work_qs.init_full(1,1);
 
     worker_thread w(0);
-    w.run(ifile, work_qs, process_qs);
+    w.run(ifile, work_qs, process_qs, 4);
 
     ifile.close();
     return 0;

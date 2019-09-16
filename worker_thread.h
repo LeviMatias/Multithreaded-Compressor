@@ -19,7 +19,7 @@ class worker_thread {
     public:
     explicit worker_thread(int id);
     void run(ProtectedFile &ifile, safe_queue_list &work_qs,\
-                        safe_queue_list &process_qs);
+                        safe_queue_list &process_qs, int block_size);
     void join();
 
 };
