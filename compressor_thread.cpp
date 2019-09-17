@@ -21,10 +21,10 @@ void compressor_thread::join() {
 void compressor_thread::_run(ProtectedFile &ifile, safe_queue_list &compress_qs,\
                         safe_queue_list &write_qs, size_t block_size) {
     int r = 0;
-    size_t size = block_size * BYTES_PER_NUMBER;
+    const size_t size = block_size * BYTES_PER_NUMBER;
     while (r == 0){
-        char blk[size];
-        r = ifile.read(blk, size, this->id);
+        std::vector<char> blk(size,0);
+        r = ifile.read(&blk[0], size, this->id);
         if (r == 0){
             CompressResult* res;
             //gets( or waits for) free cr

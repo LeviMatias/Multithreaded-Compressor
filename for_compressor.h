@@ -20,7 +20,7 @@ class FoRCompressor {
 
     public:
 
-    static void compress(CompressResult* &r, char* to_compress,\
+    static void compress(CompressResult* &r, std::vector<char> &to_compress,\
                             size_t source_size, size_t block_size);
 };
 

@@ -32,23 +32,24 @@ namespace {
 
     int sub_smallest(std::list<uint32_t> &nums) {
         int min = find_min(nums);
-        std::for_each(nums.begin(), nums.end(), [min](uint32_t &n) { n -= min; });
+        std::for_each(nums.begin(), nums.end(), [min](uint32_t &n){n -= min;});
         return min;
     }
 
-    int fill_int_list(std::list<uint32_t> &list, char *source, int source_size) {
+    int fill_int_list(std::list<uint32_t> &list, std::vector<char> &source,\
+                        int source_size){
         int i;
         printf("swaperino");
         for (i = 0; i < (source_size); i += BYTES_PER_NUMBER) {
             //int* ptr = (int*)(source + i);
             //int v = (int)ntohl(*ptr);
-            int v = (int) *(source + i + 3);
+            int v = (int)(source[i + 3]);
             list.push_front(v);
         }
         return i / BYTES_PER_NUMBER;
     }
 
-    std::vector<unsigned char> pack(std::list<uint32_t> &nums, int &bit_size) {
+    std::vector<unsigned char> pack(std::list<uint32_t> &nums, int &bit_size){
         //assume: max variance is of 8 bits
         const int size = ceil(bit_size * nums.size() / BITS_IN_BYTE);
         std::vector<unsigned char> bytes_v(size, 0);
@@ -77,7 +78,7 @@ namespace {
 
 }
 
-void FoRCompressor::compress(CompressResult* &r, char* to_compress,\
+void FoRCompressor::compress(CompressResult* &r, std::vector<char> &to_compress,\
                             size_t source_size, size_t block_size){
     //if (to_compress->length() < (block_size * BYTES_PER_NUMBER)) {
         //fix_size(to_compress, block_size);//fill with zeroes
