@@ -25,10 +25,12 @@ void safe_queue_list::init_full(int nqueues, int max_elements) {
 void safe_queue_list::add_element(int queue_id, CompressResult result) {
     //other option is to encapsulate q in another class that enforces limit
     std::unique_lock<std::mutex> lock(this->m2);
-    while (this->queues.at(queue_id).size() == this->max_elements) this->put_cv.wait(lock);
+    while (this->queues.at(queue_id).size() == this->max_elements) {
+        if (all_queues_closed()) return;
+        this->put_cv.wait(lock);
+    }
     this->queues.at(queue_id).push(result);
     get_cv.notify_all();
-    result.print_to_cout();
     //lock gets released by destructor
 }
 
