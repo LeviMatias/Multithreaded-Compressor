@@ -40,27 +40,28 @@ namespace {
                         int source_size){
         int i;
         printf("swaperino");
-        for (i = 0; i < (source_size); i += BYTES_PER_NUMBER) {
+        for (i = 0; i < source_size; i += BYTES_PER_NUMBER) {
             //int* ptr = (int*)(source + i);
             //int v = (int)ntohl(*ptr);
             int v = (int)(source[i + 3]);
-            list.push_front(v);
+            list.push_back(v);
         }
         return i / BYTES_PER_NUMBER;
     }
 
-    std::vector<unsigned char> pack(std::list<uint32_t> &nums, int &bit_size){
+    std::vector<unsigned char> pack(std::list<uint32_t> &nums, size_t &bit_size){
         //assume: max variance is of 8 bits
         const int size = ceil(bit_size * nums.size() / BITS_IN_BYTE);
         std::vector<unsigned char> bytes_v(size, 0);
-        int free_bits = BITS_IN_BYTE;
+        unsigned int free_bits = BITS_IN_BYTE;
         int j = 0;
 
-        std::for_each(nums.begin(), nums.end(), [&](uint32_t &n) {
-                          int bits_to_mov = bit_size;
+        std::for_each(nums.begin(), nums.end(), [&](uint32_t &n){
+                          unsigned int bits_to_mov = bit_size;
                           auto nc = (unsigned char)n;
                           while (bits_to_mov > 0) {
-                              int bits_movd = std::min(free_bits, bits_to_mov);
+                              unsigned int bits_movd;
+                              bits_movd = std::min(free_bits, bits_to_mov);
                               nc = (nc << (free_bits - bits_movd));
                               bytes_v[j] = bytes_v[j] | nc;
 
@@ -86,7 +87,7 @@ void FoRCompressor::compress(CompressResult* &r, std::vector<char> &to_compress,
     std::list<uint32_t> nums;
     fill_int_list(nums, to_compress, source_size);
     int reference = sub_smallest(nums);
-    int bit_size = find_bits_to_represent_n(nums);
+    size_t bit_size = find_bits_to_represent_n(nums);
     std::vector<unsigned char> packed_bytes = pack(nums, bit_size);
     r->set(reference, bit_size, packed_bytes);
 }

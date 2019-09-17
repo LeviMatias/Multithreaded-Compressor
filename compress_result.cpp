@@ -25,8 +25,20 @@ void CompressResult::set(int ref, char bs, std::vector<unsigned char> &pb){
 }
 
 void CompressResult::print_to_cout() {
-    std::string str(this->packed_bytes.begin(), this->packed_bytes.end());
-    std::cout<< "num: " << this->reference << this->bit_size << str << std::endl;
+    std::cout<< "num: " << this->reference << +this->bit_size;
+    std::for_each(this->packed_bytes.begin(), this->packed_bytes.end(), [&](unsigned char &n){
+        for (int i= BITS_IN_BYTE-1; i >= 0; i--){
+            int mask =  1 << i;
+            int masked_n = n & mask;
+            int bit = masked_n >> i;
+            std::printf("%d",bit);
+        }
+    });
+    std::cout<<std::endl;
+}
+
+void CompressResult::write(){
+
 }
 
 void CompressResult::release(){

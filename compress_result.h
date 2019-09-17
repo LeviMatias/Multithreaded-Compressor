@@ -8,6 +8,10 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <algorithm>
+
+#define BYTES_PER_NUMBER 4
+#define BITS_IN_BYTE 8
 
 class CompressResult {
     private:
@@ -28,6 +32,8 @@ class CompressResult {
             std::vector<unsigned char> &packed_bytes);
     void print_to_cout();
     void release();
+
+    void write();
 };
 
 
