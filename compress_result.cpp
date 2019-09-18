@@ -4,7 +4,8 @@
 
 #include "compress_result.h"
 
-#include <utility>
+
+size_t get_size();
 
 CompressResult::CompressResult() {
     this->bit_size = 0;
@@ -18,7 +19,7 @@ CompressResult::CompressResult(const CompressResult &old_obj) {
     this->bit_size = old_obj.bit_size;
 }
 
-void CompressResult::set(int ref, char bs, std::vector<unsigned char> &pb){
+void CompressResult::set(uint32_t ref, unsigned char bs, std::vector<unsigned char> &pb){
     this->reference = ref;
     this->bit_size = bs;
     this->packed_bytes = std::move(pb);
@@ -28,17 +29,28 @@ void CompressResult::print_to_cout() {
     std::cout<< "num: " << this->reference << +this->bit_size;
     std::for_each(this->packed_bytes.begin(), this->packed_bytes.end(), [&](unsigned char &n){
         for (int i= BITS_IN_BYTE-1; i >= 0; i--){
-            int mask =  1 << i;
-            int masked_n = n & mask;
-            int bit = masked_n >> i;
+            unsigned int mask =  1 << i;
+            unsigned int masked_n = n & mask;
+            unsigned int bit = masked_n >> i;
             std::printf("%d",bit);
         }
     });
     std::cout<<std::endl;
 }
 
-void CompressResult::write(){
+void CompressResult::write(std::vector<unsigned char> &buffer){
+    buffer.resize(sizeof(this->bit_size) + sizeof(this->reference));
+    int offset = sizeof(this->reference);
+    std::memcpy(buffer.data(), &this->reference, offset);
+    std::memcpy(buffer.data() + offset, &this->reference, sizeof(this->bit_size));
+    buffer.insert(buffer.end(), this->packed_bytes.begin(), this->packed_bytes.end());
+}
 
+size_t CompressResult::get_size(){
+    size_t s = sizeof(this->reference);
+    s += sizeof(this->bit_size);
+    s += this->packed_bytes.size();
+    return s;
 }
 
 void CompressResult::release(){

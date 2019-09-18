@@ -22,7 +22,11 @@ void safe_queue_list::init_full(int nqueues, int max_elements) {
     }
 }
 
-void safe_queue_list::add_element(int queue_id, CompressResult result) {
+size_t safe_queue_list::get_number_of_qs(){
+    return this->number_of_qs;
+}
+
+void safe_queue_list::add_element(int queue_id, const CompressResult& result) {
     //other option is to encapsulate q in another class that enforces limit
     std::unique_lock<std::mutex> lock(this->m2);
     while (this->queues.at(queue_id).size() == this->max_elements) {

@@ -9,14 +9,16 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <utility>
+#include <cstring>
 
 #define BYTES_PER_NUMBER 4
 #define BITS_IN_BYTE 8
 
 class CompressResult {
     private:
-    int reference;
-    char bit_size;
+    uint32_t reference;
+    unsigned char bit_size;
     //problem: bitset needs compile time size
     //bitset and vector<bool> are not containers so
     //the passing needs to be done bit to bit
@@ -28,12 +30,14 @@ class CompressResult {
     public:
     CompressResult();
     CompressResult(const CompressResult &old_obj);
-    void set(int reference, char bit_size,\
+    void set(uint32_t reference, unsigned char bit_size,\
             std::vector<unsigned char> &packed_bytes);
+
     void print_to_cout();
+    void write(std::vector<unsigned char> &buffer);
     void release();
 
-    void write();
+    size_t get_size();
 };
 
 

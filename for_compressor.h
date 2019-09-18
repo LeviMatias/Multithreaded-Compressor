@@ -12,8 +12,11 @@
 // frame of reference compressor
 class FoRCompressor {
     public:
-    static void compress(CompressResult* &r, std::vector<char> &to_compress,\
-                            size_t source_size, size_t block_size);
+    //PRE: to_compress contains the 4-byte numbers to be compress
+    //
+    //POS compresses to_compress into compress_result r
+    static void compress(CompressResult &r, std::vector<char> &to_compress,\
+                         size_t block_size);
 };
 
 

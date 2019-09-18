@@ -4,7 +4,7 @@
 
 #include "safe_file.h"
 
-void ProtectedFile::init(int acs_points) {
+void ProtectedFile::init(unsigned int acs_points) {
     this->access_points = acs_points;
     this->current_access = 0;
 }

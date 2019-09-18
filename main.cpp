@@ -6,6 +6,7 @@
 #include "safe_queue_list.h"
 
 int main(int argc, char* argv[]) {
+    //argv[1]
     ProtectedFile ifile;
     ifile.open("oneblk");
     ifile.init(1);

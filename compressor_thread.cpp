@@ -30,7 +30,7 @@ void compressor_thread::_run(ProtectedFile &ifile, safe_queue_list &compress_qs,
             //gets( or waits for) free cr
             int s = compress_qs.get_element(this->id, res);
             if (s == 0){
-                FoRCompressor::compress(res, blk, size, block_size);
+                FoRCompressor::compress(*res, blk, block_size);
                 write_qs.add_element(this->id, *res);
                 compress_qs.pop_element(this->id);
             }

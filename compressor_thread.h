@@ -20,6 +20,8 @@ class compressor_thread {
     explicit compressor_thread(int id);
     void run(ProtectedFile &ifile, safe_queue_list &work_qs,\
                         safe_queue_list &process_qs, size_t block_size);
+
+    //POS calls join in the internal thread
     void join();
 
 };
