@@ -14,7 +14,7 @@ class writer_thread {
 private:
     std::thread thread;
     const int id;
-    safe_queue<result_queue> qs;
+    safe_queue<result_queue*> qs;
 
     void _run(ProtectedFile &ifile, size_t block_size);
 public:

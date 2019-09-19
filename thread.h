@@ -13,8 +13,6 @@ private:
     std::thread thread;
 
 public:
-    Thread () {}
-
     void start() {
         thread = std::thread(&Thread::run, this);
     }
@@ -24,7 +22,6 @@ public:
     }
 
     virtual void run() = 0;
-    virtual ~Thread() {}
 };
 
 

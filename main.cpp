@@ -28,14 +28,13 @@ int main(int argc, char* argv[]) {
     std::for_each(threads.begin(), threads.end(), [&](compressor_thread &thread){
        thread.run(ifile, 4);
     });
-    //wr.run(ifile, work_qs, process_qs, 4);
-    printf("2221111");
+    wr.run(ifile, 4);
     std::for_each(threads.begin(), threads.end(), [&](compressor_thread &thread){
         printf("aaaa");
         thread.join();
         printf("bbbb");
-      //  wr.join();
     });
+    wr.join();
     printf("11111111");
 
     printf("3");

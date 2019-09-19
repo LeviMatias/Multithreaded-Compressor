@@ -51,6 +51,8 @@ public:
     //0 if s -1 if not
     int get_element(T* &elem);
 
+    void move_front_to_back();
+
     //pops element in queue
     //because each thread has its own queue, no protection is needed
     void pop_element();
@@ -101,6 +103,8 @@ int safe_queue<T>::get_element(T* &elem) {
     }
 
     elem = &(this->queue.front());
+    lock.unlock();
+    this->get_cv.notify_all();
     return 0;
 }
 
@@ -146,6 +150,13 @@ safe_queue<T>::safe_queue() {
     this->queue = std::queue<T>();
     this->max_elements = 0;
     this->closed = false;
+}
+
+template<class T>
+void safe_queue<T>::move_front_to_back(){
+    T elem = this->queue.front();
+    this->queue.pop();
+    this->queue.push(elem);
 }
 
 #endif //TP1_PROJECT_SAFE_QUEUE_H
