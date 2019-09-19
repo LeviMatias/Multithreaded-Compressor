@@ -4,8 +4,7 @@
 
 #include "compressor_thread.h"
 
-compressor_thread::compressor_thread(int id, result_queue *rqs) {
-    this->id = id;
+compressor_thread::compressor_thread(const int id, result_queue *rqs) : id(id) {
     this->qs = rqs;
 }
 

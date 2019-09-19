@@ -3,7 +3,6 @@
 #include "for_compressor.h"
 #include "compressor_thread.h"
 #include "writer_thread.h"
-#include "safe_queue_list.h"
 #include "safe_queue_template.h"
 #include "result_queue.h"
 
@@ -18,16 +17,16 @@ int main(int argc, char* argv[]) {
 
 
     std::vector<compressor_thread> threads;
-
-    writer_thread wr(0);
     std::vector<result_queue> qs;
+
     for (int i=0; i<1; i++){
         qs.push_back(result_queue(t));
         threads.push_back(compressor_thread(i, &(qs.back())));
     }
+    writer_thread wr(0, &qs);
     printf("asd");
     std::for_each(threads.begin(), threads.end(), [&](compressor_thread &thread){
-       thread._run(ifile, 4);
+       thread.run(ifile, 4);
     });
     //wr.run(ifile, work_qs, process_qs, 4);
     printf("2221111");

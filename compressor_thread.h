@@ -9,13 +9,12 @@
 #include "result_queue.h"
 #include "safe_file.h"
 #include "for_compressor.h"
-#include "safe_queue_list.h"
 
 class compressor_thread {
     public:
     std::thread thread;
     result_queue *qs;
-    int id;
+    const int id;
     void _run(ProtectedFile &ifile, size_t block_size);
     public:
 

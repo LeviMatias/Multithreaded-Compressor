@@ -60,19 +60,20 @@ public:
     //POS true when close_queue has been called once before
     bool is_closed();
 
-    void release();
+    bool is_empty();
 
+    void release();
 };
 
 template <class T>
-void safe_queue<T>::init(int max_elements) {
+void safe_queue<T>::init(const int max_elements) {
     this->max_elements = max_elements;
     this->closed = false;
     this->queue = std::queue<T>();
 }
 
 template <class T>
-void safe_queue<T>::init_full(int max_elements) {
+void safe_queue<T>::init_full(const int max_elements) {
     this->init(max_elements);
     for (int j=0; j<max_elements; j++){
         this->queue.push(T());
@@ -121,6 +122,11 @@ void safe_queue<T>::close_queue() {
 template <class T>
 bool safe_queue<T>::is_closed(){
     return (this->closed);
+}
+
+template <class T>
+bool safe_queue<T>::is_empty(){
+    return this->queue.empty();
 }
 
 template <class T>
