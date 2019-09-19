@@ -13,17 +13,22 @@
 template <class T>
 class safe_queue{
 private:
-    unsigned int max_elements;
-    bool closed;
 
     std::mutex m;
     std::mutex m2;
     std::condition_variable get_cv;
     std::condition_variable put_cv;
 
+protected:
+    unsigned int max_elements{};
+    bool closed{};
     std::queue<T> queue;
 
 public:
+    safe_queue();
+
+    safe_queue(const safe_queue& sq);
+
     //[1] initializers:
     //initializes #number_of_queues each with a unique id that
     //goes from 0 to #number_of_queues-1
@@ -57,8 +62,6 @@ public:
 
     void release();
 
-
-
 };
 
 template <class T>
@@ -91,7 +94,7 @@ void safe_queue<T>::add_element(const T& result) {
 template <class T>
 int safe_queue<T>::get_element(T* &elem) {
     std::unique_lock<std::mutex> lock(this->m);
-    while (this->queues.empty()) {
+    while (this->queue.empty()) {
         if (is_closed()) return 1;
         this->get_cv.wait(lock);
     }
@@ -123,6 +126,20 @@ bool safe_queue<T>::is_closed(){
 template <class T>
 void safe_queue<T>::release() {
     //nothing to release;
+}
+
+template<class T>
+safe_queue<T>::safe_queue(const safe_queue &sq) {
+    this->max_elements = sq.max_elements;
+    this->closed = sq.closed;
+    this->queue = sq.queue;
+}
+
+template<class T>
+safe_queue<T>::safe_queue() {
+    this->queue = std::queue<T>();
+    this->max_elements = 0;
+    this->closed = false;
 }
 
 #endif //TP1_PROJECT_SAFE_QUEUE_H

@@ -5,8 +5,8 @@
 #ifndef TP1_PROJECT_RESULT_QUEUE_H
 #define TP1_PROJECT_RESULT_QUEUE_H
 
-#import "safe_queue_template.h"
-#import "compress_result.h"
+#include "safe_queue_template.h"
+#include "compress_result.h"
 
 class result_queue {
     safe_queue<CompressResult> empty_results;

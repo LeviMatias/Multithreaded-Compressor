@@ -26,6 +26,7 @@ class safe_queue_list {
     <std::queue<T> queue;
 
     public:
+
     //[1] initializers:
     //initializes #number_of_queues each with a unique id that
     //goes from 0 to #number_of_queues-1

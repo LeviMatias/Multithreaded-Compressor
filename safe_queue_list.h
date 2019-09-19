@@ -43,7 +43,7 @@ class safe_queue_list {
     //POS: adds element to queue with the queue id
     void add_element(int queue_id, const CompressResult &result);
 
-    //why use poinconst ter? its possi&ble that this function
+    //why use pointer? its possi&ble that this function
     //fails to retrieve an element when the qs are closed and thread
     //is waiting in an empty queue
 
