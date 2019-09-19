@@ -1,0 +1,128 @@
+//
+// Created by Matias on 15/09/2019.
+//
+
+#ifndef TP1_PROJECT_SAFE_QUEUE_H
+#define TP1_PROJECT_SAFE_QUEUE_H
+
+#include <queue>
+#include <mutex>
+#include <condition_variable>
+
+
+template <class T>
+class safe_queue{
+private:
+    unsigned int max_elements;
+    bool closed;
+
+    std::mutex m;
+    std::mutex m2;
+    std::condition_variable get_cv;
+    std::condition_variable put_cv;
+
+    std::queue<T> queue;
+
+public:
+    //[1] initializers:
+    //initializes #number_of_queues each with a unique id that
+    //goes from 0 to #number_of_queues-1
+
+    //POS [1]
+    void init(int max_elements);
+
+    //POS [1]
+    //also fills de queues with compress_result (could use a template)
+    void init_full(int max_elements);
+
+    //POS: adds element to queue with the queue id
+    void add_element(const T &result);
+
+    //why use poinconst ter? its possi&ble that this function
+    //fails to retrieve an element when the qs are closed and thread
+    //is waiting in an empty queue
+
+    //POS: if successful elem points to element
+    //0 if s -1 if not
+    int get_element(T* &elem);
+
+    //pops element in queue
+    //because each thread has its own queue, no protection is needed
+    void pop_element();
+
+    void close_queue();
+
+    //POS true when close_queue has been called once before
+    bool is_closed();
+
+    void release();
+
+
+
+};
+
+template <class T>
+void safe_queue<T>::init(int max_elements) {
+    this->max_elements = max_elements;
+    this->closed = false;
+    this->queue = std::queue<T>();
+}
+
+template <class T>
+void safe_queue<T>::init_full(int max_elements) {
+    this->init(max_elements);
+    for (int j=0; j<max_elements; j++){
+        this->queue.push(T());
+    }
+}
+
+template <class T>
+void safe_queue<T>::add_element(const T& result) {
+    std::unique_lock<std::mutex> lock(this->m2);
+    while (this->queue.size() == this->max_elements) {
+        if (is_closed()) return;
+        this->put_cv.wait(lock);
+    }
+    this->queue.push(result);
+    get_cv.notify_all();
+    //lock gets released by destructor
+}
+
+template <class T>
+int safe_queue<T>::get_element(T* &elem) {
+    std::unique_lock<std::mutex> lock(this->m);
+    while (this->queues.empty()) {
+        if (is_closed()) return 1;
+        this->get_cv.wait(lock);
+    }
+
+    elem = &(this->queue.front());
+    return 0;
+}
+
+template <class T>
+void safe_queue<T>::pop_element() {
+    if (!this->queue.empty()){
+        this->queue.pop();
+        put_cv.notify_all();
+    }
+}
+
+template <class T>
+void safe_queue<T>::close_queue() {
+    this->closed = true;
+    this->get_cv.notify_all();
+    this->put_cv.notify_all();
+}
+
+template <class T>
+bool safe_queue<T>::is_closed(){
+    return (this->closed);
+}
+
+template <class T>
+void safe_queue<T>::release() {
+    //nothing to release;
+}
+
+#endif //TP1_PROJECT_SAFE_QUEUE_H
