@@ -4,9 +4,9 @@
 
 #include "compressor_thread.h"
 
-compressor_thread::compressor_thread(int id, result_queue &rqs) {
-    this->id;
-    this->qs = &rqs;
+compressor_thread::compressor_thread(int id, result_queue *rqs) {
+    this->id = id;
+    this->qs = rqs;
 }
 
 void compressor_thread::run(ProtectedFile &ifile, size_t block_size){

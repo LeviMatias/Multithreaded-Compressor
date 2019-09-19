@@ -11,10 +11,14 @@ void ProtectedFile::init(unsigned int acs_points) {
 
 int ProtectedFile::open(const std::string& path){
     this->file.open(path, std::fstream::in | std::fstream::out);
-    return 0;
+    if (this->file.good()){
+        return 0;
+    }
+    printf("failed");
+    return 1;
 }
 
-int ProtectedFile::read(char* buffer, size_t size, int port){
+int ProtectedFile::read(char* buffer, size_t size, unsigned int port){
     std::unique_lock<std::mutex> lock(this->m);
     while (this->current_access != port) this->cv.wait(lock);
     int s = 0;

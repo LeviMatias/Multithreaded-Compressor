@@ -27,8 +27,8 @@ void writer_thread::_run(ProtectedFile &ofile, safe_queue_list &compress_qs,\
         s = write_qs.get_element(this->id, res);
         if (s == 0){
             res->print_to_cout();
-            compress_qs.add_element(this->id, *res);
-            write_qs.pop_element(this->id);
+            //compress_qs.add_element(this->id, *res);
+            //write_qs.pop_element(this->id);
         }
     }
     compress_qs.close_queue(this->id);

@@ -12,14 +12,14 @@
 #include "safe_queue_list.h"
 
 class compressor_thread {
-    private:
+    public:
     std::thread thread;
     result_queue *qs;
     int id;
     void _run(ProtectedFile &ifile, size_t block_size);
     public:
 
-    explicit compressor_thread(int id, result_queue &qs);
+    explicit compressor_thread(int id, result_queue *qs);
     void run(ProtectedFile &ifile, size_t block_size);
 
     //POS calls join in the internal thread

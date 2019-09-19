@@ -30,7 +30,7 @@ class ProtectedFile {
     //or waiting until port is available
     //POS 0 if successfully read, -1 otherwise
     //if 0, it rotates the open port to the next one
-    int read(char* buffer, size_t size, int port);
+    int read(char* buffer, size_t size,unsigned int port);
 
     int write(char* buffer, size_t size);
 

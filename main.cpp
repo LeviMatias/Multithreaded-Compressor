@@ -21,12 +21,13 @@ int main(int argc, char* argv[]) {
 
     writer_thread wr(0);
     std::vector<result_queue> qs;
-    for (int i=0; i<t; i++){
+    for (int i=0; i<1; i++){
         qs.push_back(result_queue(t));
-        threads.push_back(compressor_thread(i, *qs.end()));
+        threads.push_back(compressor_thread(i, &(qs.back())));
     }
+    printf("asd");
     std::for_each(threads.begin(), threads.end(), [&](compressor_thread &thread){
-       thread.run(ifile, 4);
+       thread._run(ifile, 4);
     });
     //wr.run(ifile, work_qs, process_qs, 4);
     printf("2221111");
