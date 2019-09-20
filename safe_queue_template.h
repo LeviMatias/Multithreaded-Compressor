@@ -104,7 +104,6 @@ int safe_queue<T>::get_element(T* &elem) {
 
     elem = &(this->queue.front());
     lock.unlock();
-    this->get_cv.notify_all();
     return 0;
 }
 

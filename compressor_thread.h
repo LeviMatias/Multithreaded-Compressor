@@ -11,7 +11,7 @@
 #include "for_compressor.h"
 
 class compressor_thread {
-    private:
+    public:
     std::thread thread;
     result_queue *qs;
     const int id;
@@ -20,7 +20,8 @@ class compressor_thread {
     void _run(ProtectedFile &ifile, size_t block_size);
     public:
 
-    explicit compressor_thread(int id, result_queue *qs);
+    explicit compressor_thread(int id, result_queue &qs);
+
     void run(ProtectedFile &ifile, size_t block_size, bool from_stdin);
 
     //POS calls join in the internal thread

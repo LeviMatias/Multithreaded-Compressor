@@ -26,19 +26,23 @@ int execute_program(int b, int t, int q, char* argv[]){
         std::vector<compressor_thread> threads;
         std::vector<result_queue> qs;
 
-        for (int i=0; i<2; i++){
+        for (int i=0; i<t; i++){
+            //I need 2 separate loops because vector 3 can reposition
+            //itself and break pointers inside thread
             qs.push_back(result_queue(t));
-            threads.push_back(compressor_thread(i, &(qs.back())));
+        }
+        for (int i=0; i<t; i++){
+            threads.push_back(compressor_thread(i, qs[i]));
         }
         writer_thread wr(0, &qs);
-        std::for_each(threads.begin(), threads.end(), [&](compressor_thread &thread){
-            thread.run(ifile, b, read_from_stdin);
-        });
+        for (int i = 0; i<t; i++){
+            threads[i].run(ifile, b, read_from_stdin);
+        };
 
         wr.run(ofile, b, write_to_cout);
-        std::for_each(threads.begin(), threads.end(), [&](compressor_thread &thread){
-            thread.join();
-        });
+        for (int i = 0; i<t; i++){
+            threads[i].join();
+        };
         wr.join();
 
         ifile.close();

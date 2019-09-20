@@ -16,7 +16,6 @@ class result_queue {
 public:
     explicit result_queue(size_t n_elems);
 
-
     int get_empty(CompressResult *&r);
 
     void mov_from_empty_to_ready();
