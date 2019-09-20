@@ -34,7 +34,7 @@ class CompressResult {
             std::vector<unsigned char> &packed_bytes);
 
     void print_to_cout();
-    std::vector<char> to_vector();
+    void to_vector(std::vector<char> &buffer);
     void release();
 
     size_t get_size();

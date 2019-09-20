@@ -4,12 +4,12 @@
 
 #include "writer_thread.h"
 
-writer_thread::writer_thread(const int id, std::vector<result_queue> *qs) : id(id) {
-    this->qs.init(qs->size());
+writer_thread::writer_thread(const int id, std::vector<result_queue> &qs) : id(id) {
+    this->qs.init(qs.size());
     this->use_stdout = false;
-    std::for_each(qs->begin(), qs->end(), [&](result_queue &q){
+    for (auto & q : qs){
         this->qs.add_element(&q);
-    });
+    };
 }
 
 void writer_thread::run(ProtectedFile &ifile, const size_t block_size, bool use_stdout){
@@ -34,7 +34,8 @@ void writer_thread::_run(ProtectedFile &ofile, const size_t block_size){
                 if (this->use_stdout){
                     res->print_to_cout();
                 }else{
-                    std::vector<char> msg = res->to_vector();
+                    std::vector<char> msg;
+                    res->to_vector(msg);
                     ofile.write(msg.data(), msg.size());
                 }
                 (*q)->mov_from_ready_to_empty();
@@ -46,4 +47,5 @@ void writer_thread::_run(ProtectedFile &ofile, const size_t block_size){
             qs.pop_element();
         }
     }
+    printf("thread w finished");
 }

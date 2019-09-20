@@ -14,7 +14,7 @@ int execute_program(int b, int t, int q, char* argv[]){
     int s = 0;
     if (!read_from_stdin){
         s = ifile.open(argv[4]);
-        ifile.init(2);
+        ifile.init(t);
     }
     if (!write_to_cout){
         //create file
@@ -34,7 +34,7 @@ int execute_program(int b, int t, int q, char* argv[]){
         for (int i=0; i<t; i++){
             threads.push_back(compressor_thread(i, qs[i]));
         }
-        writer_thread wr(0, &qs);
+        writer_thread wr(0, qs);
         for (int i = 0; i<t; i++){
             threads[i].run(ifile, b, read_from_stdin);
         };
