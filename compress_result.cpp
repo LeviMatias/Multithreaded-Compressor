@@ -38,12 +38,14 @@ void CompressResult::print_to_cout() {
     std::cout<<std::endl;
 }
 
-void CompressResult::write(std::vector<unsigned char> &buffer){
+std::vector<char> CompressResult::to_vector(){
+    std::vector<char> buffer;
     buffer.resize(sizeof(this->bit_size) + sizeof(this->reference));
     int offset = sizeof(this->reference);
-    std::memcpy(buffer.data(), &this->reference, offset);
-    std::memcpy(buffer.data() + offset, &this->reference, sizeof(this->bit_size));
+    std::memcpy(buffer.data() + offset - 1, &this->reference, offset);
+    std::memcpy(buffer.data() + offset, &this->bit_size, sizeof(this->bit_size));
     buffer.insert(buffer.end(), this->packed_bytes.begin(), this->packed_bytes.end());
+    return buffer;
 }
 
 size_t CompressResult::get_size(){

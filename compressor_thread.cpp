@@ -6,9 +6,11 @@
 
 compressor_thread::compressor_thread(const int id, result_queue *rqs) : id(id) {
     this->qs = rqs;
+    this->from_stdin = false;
 }
 
-void compressor_thread::run(ProtectedFile &ifile, size_t block_size){
+void compressor_thread::run(ProtectedFile &ifile, size_t block_size, bool from_stdin){
+    this->from_stdin = from_stdin;
     this->thread = std::thread(&compressor_thread::_run, this, std::ref(ifile), block_size);
 }
 

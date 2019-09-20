@@ -15,11 +15,12 @@ private:
     std::thread thread;
     const int id;
     safe_queue<result_queue*> qs;
+    bool use_stdout;
 
     void _run(ProtectedFile &ifile, size_t block_size);
 public:
     explicit writer_thread(int id, std::vector<result_queue> *qs);
-    void run(ProtectedFile &ifile, size_t block_size);
+    void run(ProtectedFile &ifile, size_t block_size, bool use_stdout);
     void join();
 };
 

@@ -3,41 +3,81 @@
 #include "for_compressor.h"
 #include "compressor_thread.h"
 #include "writer_thread.h"
-#include "safe_queue_template.h"
-#include "result_queue.h"
+#include <stdexcept>
+
+#define EXPECTED_ARGC 6
+
+int execute_program(int b, int t, int q, char* argv[]){
+    ProtectedFile ifile, ofile;
+    bool read_from_stdin = strcmp(argv[4], "-") == 0;
+    bool write_to_cout = strcmp(argv[5], "-") == 0;
+    int s = 0;
+    if (!read_from_stdin){
+        s = ifile.open(argv[4]);
+        ifile.init(2);
+    }
+    if (!write_to_cout){
+        //create file
+        {std::ofstream outfile (argv[5]);}
+        s = ofile.open(argv[5]);
+        ofile.init(1);//only 1 writer thread
+    }
+    if (s==0){
+        std::vector<compressor_thread> threads;
+        std::vector<result_queue> qs;
+
+        for (int i=0; i<2; i++){
+            qs.push_back(result_queue(t));
+            threads.push_back(compressor_thread(i, &(qs.back())));
+        }
+        writer_thread wr(0, &qs);
+        std::for_each(threads.begin(), threads.end(), [&](compressor_thread &thread){
+            thread.run(ifile, b, read_from_stdin);
+        });
+
+        wr.run(ofile, b, write_to_cout);
+        std::for_each(threads.begin(), threads.end(), [&](compressor_thread &thread){
+            thread.join();
+        });
+        wr.join();
+
+        ifile.close();
+        ofile.close();
+    }
+    return  s;
+}
+
+int check_arguments(int argc, char* argv[]){
+    //this is to set s = 0 if argc == expected_argc
+    int s = argc!=EXPECTED_ARGC;
+    if (s == 0){
+
+    }
+
+
+    return s;
+}
 
 int main(int argc, char* argv[]) {
     //./tp <N - #que componen bloque> <T-hreads> <Q-max q elems> <infile> <outfile>
-    ProtectedFile ifile;
-    ifile.open(argv[4]);
-    ifile.init(1);
 
-    int t = std::stoi(argv[2], nullptr, 10);
-    int q = std::stoi(argv[3], nullptr, 10);
+    int t,q,n,s = argc!=EXPECTED_ARGC;
 
-
-    std::vector<compressor_thread> threads;
-    std::vector<result_queue> qs;
-
-    for (int i=0; i<1; i++){
-        qs.push_back(result_queue(t));
-        threads.push_back(compressor_thread(i, &(qs.back())));
+    if (s == 0) {
+        try {
+            n = std::stoi(argv[1], nullptr, 10);//#block size
+            t = std::stoi(argv[2], nullptr, 10);//#threads
+            q = std::stoi(argv[3], nullptr, 10);//#max elems
+        } catch (const std::invalid_argument &ia) {
+            std::cerr << "Invalid argument: " << ia.what() << '\n';
+            s = 1;
+        }
+        if (s == 0 && (t < 0 || q < 0 || n < 0)) s = 1;
     }
-    writer_thread wr(0, &qs);
-    printf("asd");
-    std::for_each(threads.begin(), threads.end(), [&](compressor_thread &thread){
-       thread.run(ifile, 4);
-    });
-    wr.run(ifile, 4);
-    std::for_each(threads.begin(), threads.end(), [&](compressor_thread &thread){
-        printf("aaaa");
-        thread.join();
-        printf("bbbb");
-    });
-    wr.join();
-    printf("11111111");
 
-    printf("3");
-    ifile.close();
-    return 0;
+    if (s == 0){
+        s = execute_program(n, t, q, argv);
+    }
+
+    return s;
 }
