@@ -8,6 +8,10 @@ turn::turn(){
     this->t = false;
 }
 
+turn::turn(const turn &other) {
+    this->t = false;
+}
+
 void turn::wait_for_turn() {
     std::unique_lock<std::mutex>lock (this->m);
     while (!this->t){

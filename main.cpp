@@ -40,8 +40,8 @@ int execute_program(int b, int t, int q, char* argv[]){
         };
         wr.join();
 
-        ifile.close();
-        ofile.close();
+        istream.close();
+        ostream.close();
     }
     return  s;
 }

@@ -4,16 +4,21 @@
 
 #include "thread.h"
 
-Thread::Thread(safe_stream &stream, size_t block_size){
-    this->turn = false;
+Thread::Thread(safe_stream &strm, size_t blk_size){
+    this->stream = &strm;
+    this->block_size = blk_size;
+
 }
 
 void Thread::run(turn_scheduler &ts) {
-    this->turn = false;
-    this->thread = std::thread(&Thread::_run, this, std::ref(ts);
+    this->thread = std::thread(&Thread::_run, this, std::ref(ts));
 }
 
 void Thread::join() {
     this->thread.join();
+}
+
+safe_stream *Thread::get_stream() {
+    return this->stream;
 }
 

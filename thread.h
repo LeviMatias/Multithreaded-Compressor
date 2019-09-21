@@ -14,12 +14,13 @@
 class Thread {
 private:
     std::thread thread;
-    bool turn;
-    int id;
-    safe_stream strm;
+    safe_stream* stream;
     int block_size;
 
     virtual void _run(turn_scheduler &ts) = 0;
+
+protected:
+    safe_stream*  get_stream();
 
 public:
 

@@ -16,6 +16,8 @@ class turn {
 public:
     turn();
 
+    turn(const turn &other);
+
     //yields until execute is called
     void wait_for_turn();
 

@@ -29,14 +29,13 @@ void writer_thread::_run(safe_stream &ostream, const size_t block_size){
             CompressResult* res;
             s = (*q)->get_ready(res);
             if (s== 0){
-                    std::vector<char> msg;
-                    res->to_vector(msg);
-                    ostream.write(msg.data(), msg.size());
-                }
-                (*q)->mov_from_ready_to_empty();
-                this->qs.pop_element();
-                this->qs.add_element(*q);
+                std::vector<char> msg;
+                res->to_vector(msg);
+                ostream.write(msg.data(), msg.size());
             }
+            (*q)->mov_from_ready_to_empty();
+            this->qs.pop_element();
+            this->qs.add_element(*q);
         }
         if (s != 0){
             qs.pop_element();
