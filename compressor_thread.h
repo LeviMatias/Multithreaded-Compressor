@@ -7,7 +7,7 @@
 
 #include <thread>
 #include "result_queue.h"
-#include "safe_file.h"
+#include "safe_stream.h"
 #include "for_compressor.h"
 
 class compressor_thread {
@@ -15,14 +15,13 @@ class compressor_thread {
     std::thread thread;
     result_queue *qs;
     const int id;
-    bool from_stdin;
 
-    void _run(ProtectedFile &ifile, size_t block_size);
+    void _run(safe_stream &stream, size_t block_size);
     public:
 
     explicit compressor_thread(int id, result_queue &qs);
 
-    void run(ProtectedFile &ifile, size_t block_size, bool from_stdin);
+    void run(safe_stream &istream, size_t block_size);
 
     //POS calls join in the internal thread
     void join();

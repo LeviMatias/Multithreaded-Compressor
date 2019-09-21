@@ -2,17 +2,24 @@
 // Created by Matias on 12/09/2019.
 //
 
-#ifndef TP1_PROJECT_SAFE_FILE_H
-#define TP1_PROJECT_SAFE_FILE_H
+#ifndef TP1_PROJECT_SAFE_STREAM_H
+#define TP1_PROJECT_SAFE_STREAM_H
+#include <iostream>
 #include <fstream>
 #include <mutex>
 #include <condition_variable>
+#include <cstring>
 
-class ProtectedFile {
+class safe_stream {
     private:
     std::mutex m;
     std::condition_variable cv;
+    std::istream*  istream;
+    std::ostream* ostream;
+
     std::fstream file;
+
+    bool file_opened;
     unsigned int access_points;
     unsigned int current_access;
 
@@ -24,7 +31,9 @@ class ProtectedFile {
 
     //PRE attemps to open the file in path
     //POS 0 if successful
-    int open(const std::string& path);
+    int open_read(const std::string& path);
+
+    int open_write(const std::string& path);
 
     //PRE attemps to read the file accessing through the specified port if open
     //or waiting until port is available
@@ -41,7 +50,9 @@ class ProtectedFile {
     void close();
 
     void release();
+
+
 };
 
 
-#endif //TP1_PROJECT_SAFE_FILE_H
+#endif //TP1_PROJECT_SAFE_STREAM_H

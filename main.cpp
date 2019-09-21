@@ -1,5 +1,5 @@
 #include <iostream>
-#include "safe_file.h"
+#include "safe_stream.h"
 #include "for_compressor.h"
 #include "compressor_thread.h"
 #include "writer_thread.h"
@@ -8,20 +8,15 @@
 #define EXPECTED_ARGC 6
 
 int execute_program(int b, int t, int q, char* argv[]){
-    ProtectedFile ifile, ofile;
-    bool read_from_stdin = strcmp(argv[4], "-") == 0;
-    bool write_to_cout = strcmp(argv[5], "-") == 0;
+    safe_stream istream, ostream;
     int s = 0;
-    if (!read_from_stdin){
-        s = ifile.open(argv[4]);
-        ifile.init(t);
-    }
-    if (!write_to_cout){
-        //create file
-        {std::ofstream outfile (argv[5]);}
-        s = ofile.open(argv[5]);
-        ofile.init(1);//only 1 writer thread
-    }
+    s = istream.open_read(argv[4]);
+    if (s == 0){
+        istream.init(t);
+        s = ostream.open_write(argv[5]);
+        if (s == 0) ostream.init(1);
+        }
+
     if (s==0){
         std::vector<compressor_thread> threads;
         std::vector<result_queue> qs;
@@ -36,10 +31,10 @@ int execute_program(int b, int t, int q, char* argv[]){
         }
         writer_thread wr(0, qs);
         for (int i = 0; i<t; i++){
-            threads[i].run(ifile, b, read_from_stdin);
+            threads[i].run(istream, b);
         };
 
-        wr.run(ofile, b, write_to_cout);
+        wr.run(ostream, b);
         for (int i = 0; i<t; i++){
             threads[i].join();
         };

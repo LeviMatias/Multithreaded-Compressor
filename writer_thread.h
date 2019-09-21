@@ -6,7 +6,7 @@
 #define TP1_PROJECT_WRITER_THREAD_H
 
 #include <thread>
-#include "safe_file.h"
+#include "safe_stream.h"
 #include "for_compressor.h"
 #include "result_queue.h"
 
@@ -15,12 +15,11 @@ private:
     std::thread thread;
     const int id;
     safe_queue<result_queue*> qs;
-    bool use_stdout;
 
-    void _run(ProtectedFile &ifile, size_t block_size);
+    void _run(safe_stream &ifile, size_t block_size);
 public:
     explicit writer_thread(int id, std::vector<result_queue> &qs);
-    void run(ProtectedFile &ifile, size_t block_size, bool use_stdout);
+    void run(safe_stream &ifile, size_t block_size);
     void join();
 };
 

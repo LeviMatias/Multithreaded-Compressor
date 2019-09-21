@@ -7,21 +7,27 @@
 
 
 #include <thread>
+#include "result_queue.h"
+#include "safe_stream.h"
+#include "turn_scheduler.h"
 
 class Thread {
 private:
     std::thread thread;
+    bool turn;
+    int id;
+    safe_stream strm;
+    int block_size;
+
+    virtual void _run(turn_scheduler &ts) = 0;
 
 public:
-    void start() {
-        thread = std::thread(&Thread::run, this);
-    }
 
-    void join() {
-        thread.join();
-    }
+    explicit Thread(safe_stream &stream, size_t block_size);
 
-    virtual void run() = 0;
+    void run(turn_scheduler &ts);
+
+    void join();
 };
 
 

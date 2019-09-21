@@ -6,11 +6,9 @@
 
 compressor_thread::compressor_thread(const int id, result_queue &rqs) : id(id) {
     this->qs = &rqs;
-    this->from_stdin = false;
 }
 
-void compressor_thread::run(ProtectedFile &ifile, size_t block_size, bool from_stdin){
-    this->from_stdin = from_stdin;
+void compressor_thread::run(safe_stream &ifile, size_t block_size){
     this->thread = std::thread(&compressor_thread::_run, this, std::ref(ifile), block_size);
 }
 
@@ -18,12 +16,12 @@ void compressor_thread::join() {
     this->thread.join();
 }
 
-void compressor_thread::_run(ProtectedFile &ifile, size_t block_size) {
+void compressor_thread::_run(safe_stream &istream, size_t block_size) {
     unsigned int r = 1;
     const size_t size = block_size * BYTES_PER_NUMBER;
     while (r != 0){
         std::vector<char> blk(size,0);
-        r = ifile.read(&blk[0], size, this->id);
+        r = istream.read(&blk[0], size, this->id);
         if (r != 0){
             blk.resize(r);
             CompressResult* res;
