@@ -4,33 +4,33 @@
 
 #include "compressor_thread.h"
 
-compressor_thread::compressor_thread(const int id, result_queue &rqs) : id(id) {
+compressor_thread::compressor_thread(safe_stream &stream, size_t block_size,\
+                                result_queue &rqs) : Thread(stream, block_size){
     this->qs = &rqs;
 }
 
-void compressor_thread::run(safe_stream &ifile, size_t block_size){
-    this->thread = std::thread(&compressor_thread::_run, this, std::ref(ifile), block_size);
-}
-
-void compressor_thread::join() {
-    this->thread.join();
-}
-
-void compressor_thread::_run(safe_stream &istream, size_t block_size) {
+void compressor_thread::_run(turn_scheduler &ts) {
     unsigned int r = 1;
-    const size_t size = block_size * BYTES_PER_NUMBER;
+    auto current_turn = std::ref(ts.get_new_turn());
+    const size_t size = this->get_blk_sz() * BYTES_PER_NUMBER;
     while (r != 0){
         std::vector<char> blk(size,0);
-        r = istream.read(&blk[0], size, this->id);
+        current_turn.get().wait_for_turn();
+        r = this->get_stream()->read(&blk[0], size);
         if (r != 0){
+            //read successful, lets queue again
+            current_turn = std::ref(ts.finish_and_queue_again());
             blk.resize(r);
             CompressResult* res;
             //gets( or waits for) free cr
             int s = (*this->qs).get_empty(res);
             if (s == 0){
-                FoRCompressor::compress(*res, blk, block_size);
+                FoRCompressor::compress(*res, blk, this->get_blk_sz());
                 (*this->qs).mov_from_empty_to_ready();
             }
+        } else {
+            //we couldnt read, so lets leave the queue for good
+            ts.finish();
         }
     }
     (*this->qs).close();

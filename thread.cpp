@@ -22,3 +22,7 @@ safe_stream *Thread::get_stream() {
     return this->stream;
 }
 
+size_t Thread::get_blk_sz() {
+    return this->block_size;
+}
+

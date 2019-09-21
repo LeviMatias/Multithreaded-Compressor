@@ -5,26 +5,18 @@
 #ifndef TP1_PROJECT_COMPRESSOR_THREAD_H
 #define TP1_PROJECT_COMPRESSOR_THREAD_H
 
-#include <thread>
 #include "result_queue.h"
-#include "safe_stream.h"
+#include "thread.h"
 #include "for_compressor.h"
 
-class compressor_thread {
+class compressor_thread : public Thread {
     public:
-    std::thread thread;
     result_queue *qs;
-    const int id;
 
-    void _run(safe_stream &stream, size_t block_size);
+    virtual void _run(turn_scheduler &ts);
     public:
 
-    explicit compressor_thread(int id, result_queue &qs);
-
-    void run(safe_stream &istream, size_t block_size);
-
-    //POS calls join in the internal thread
-    void join();
+    explicit compressor_thread(safe_stream &strm, size_t blk_size, result_queue &qs);
 
 };
 

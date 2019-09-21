@@ -7,15 +7,13 @@
 
 #define EXPECTED_ARGC 6
 
-int execute_program(int b, int t, int q, char* argv[]){
+int execute_program(const int b, const int t, const int q, char* argv[]){
     safe_stream istream, ostream;
+    turn_scheduler ts;
     int s = 0;
     s = istream.open_read(argv[4]);
-    if (s == 0){
-        istream.init(t);
-        s = ostream.open_write(argv[5]);
-        if (s == 0) ostream.init(1);
-        }
+    if (s == 0) s = ostream.open_write(argv[5]);
+
 
     if (s==0){
         std::vector<compressor_thread> threads;
@@ -27,14 +25,14 @@ int execute_program(int b, int t, int q, char* argv[]){
             qs.push_back(result_queue(q));
         }
         for (int i=0; i<t; i++){
-            threads.push_back(compressor_thread(i, qs[i]));
+            threads.push_back(compressor_thread(istream, b, qs[i]));
         }
-        writer_thread wr(0, qs);
+        writer_thread wr(ostream, b, qs);
         for (int i = 0; i<t; i++){
-            threads[i].run(istream, b);
+            threads[i].run(ts);
         };
 
-        wr.run(ostream, b);
+        wr.run(ts);
         for (int i = 0; i<t; i++){
             threads[i].join();
         };

@@ -11,8 +11,9 @@
 
 class turn_scheduler {
     std::queue<turn> turns;
+    std::mutex m;
+    std::mutex m2;
     void execute_next_turn();
-    bool started = false;
 
 public:
     turn& get_new_turn();
@@ -20,8 +21,6 @@ public:
     turn& finish_and_queue_again();
 
     void finish();
-
-    void start();
 };
 
 
