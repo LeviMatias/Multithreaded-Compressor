@@ -12,7 +12,7 @@ void turn_scheduler::execute_next_turn() {
 
 turn &turn_scheduler::get_new_turn(){
     std::unique_lock<std::mutex> lock(this->m);
-    this->turns.push(turn());
+    this->turns.push_back(turn());
     if (this->turns.size() == 1){
         execute_next_turn();
         //this is to kickstart the turn exe cycle
@@ -22,7 +22,7 @@ turn &turn_scheduler::get_new_turn(){
 }
 
 void turn_scheduler::finish() {
-    this->turns.pop();
+    this->turns.pop_front();
     execute_next_turn();
 }
 

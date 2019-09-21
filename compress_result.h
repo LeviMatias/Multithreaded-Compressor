@@ -26,6 +26,8 @@ class CompressResult {
     //solution vector char can receive multiple bits through masking
     //con: harder to print to cout
     std::vector<unsigned char> packed_bytes;
+    bool ready;
+    bool finished;
 
     public:
     CompressResult();
@@ -35,7 +37,14 @@ class CompressResult {
 
     void print_to_cout();
     void to_vector(std::vector<char> &buffer);
-    void release();
+
+    bool is_ready();
+
+    bool is_finished();
+
+    void reset();
+
+    void finish();
 
     size_t get_size();
 };

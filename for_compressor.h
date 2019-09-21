@@ -8,6 +8,7 @@
 #include <list>
 #include <math.h>
 #include "compress_result.h"
+#include <winsock2.h>
 
 // frame of reference compressor
 class FoRCompressor {

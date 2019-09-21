@@ -5,12 +5,12 @@
 #ifndef TP1_PROJECT_TURN_SCHEDULER_H
 #define TP1_PROJECT_TURN_SCHEDULER_H
 
-#include <queue>
+#include <list>
 #include "safe_queue_template.h"
 #include "turn.h"
 
 class turn_scheduler {
-    std::queue<turn> turns;
+    std::list<turn> turns;
     std::mutex m;
     std::mutex m2;
     void execute_next_turn();

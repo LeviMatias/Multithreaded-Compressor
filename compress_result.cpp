@@ -11,6 +11,8 @@ CompressResult::CompressResult() {
     this->bit_size = 0;
     this->reference = 0;
     this->packed_bytes = std::vector<unsigned char>();
+    this->finished = true;
+    this->ready = true;
 }
 
 CompressResult::CompressResult(const CompressResult &old_obj) {
@@ -23,6 +25,7 @@ void CompressResult::set(uint32_t ref, unsigned char bs, std::vector<unsigned ch
     this->reference = ref;
     this->bit_size = bs;
     this->packed_bytes = std::move(pb);
+    this->ready = true;
 }
 
 void CompressResult::print_to_cout() {
@@ -53,6 +56,18 @@ size_t CompressResult::get_size(){
     return s;
 }
 
-void CompressResult::release(){
-    //nothing to release
+bool CompressResult::is_ready() {
+    return this->ready;
+}
+
+bool CompressResult::is_finished() {
+    return this->finished;
+}
+
+void CompressResult::reset() {
+    this->ready = false;
+}
+
+void CompressResult::finish() {
+    this->finished = true;
 }

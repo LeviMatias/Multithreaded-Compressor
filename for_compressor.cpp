@@ -27,12 +27,10 @@ namespace {
 
     void fill_int_list(std::list<uint32_t> &list, std::vector<char> &source, size_t block_size){
         unsigned int i,j;
-        int v = 0;
-        printf("swaperino");
+        uint32_t v = 0;
         for (i = 0; i < source.size(); i += BYTES_PER_NUMBER) {
-            //int* ptr = (int*)(source + i);
-            //int v = (int)ntohl(*ptr);
-            v = (int)(source[i + 3]);
+            int* ptr = (int*)&source[i];
+            v = ntohl(*ptr);
             list.push_back(v);
         }
         for (j=block_size - list.size(); j>0; j--){
