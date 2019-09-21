@@ -47,5 +47,4 @@ void writer_thread::_run(ProtectedFile &ofile, const size_t block_size){
             qs.pop_element();
         }
     }
-    printf("thread w finished");
 }

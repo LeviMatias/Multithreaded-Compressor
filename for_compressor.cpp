@@ -25,14 +25,18 @@ namespace {
         return min;
     }
 
-    void fill_int_list(std::list<uint32_t> &list, std::vector<char> &source){
-        unsigned int i;
+    void fill_int_list(std::list<uint32_t> &list, std::vector<char> &source, size_t block_size){
+        unsigned int i,j;
+        int v = 0;
         printf("swaperino");
         for (i = 0; i < source.size(); i += BYTES_PER_NUMBER) {
             //int* ptr = (int*)(source + i);
             //int v = (int)ntohl(*ptr);
-            int v = (int)(source[i + 3]);
+            v = (int)(source[i + 3]);
             list.push_back(v);
+        }
+        for (j=block_size - list.size(); j>0; j--){
+            list.push_back(v);//fill list to match blocksize
         }
     }
 
@@ -67,11 +71,8 @@ namespace {
 
 void FoRCompressor::compress(CompressResult &r, std::vector<char> &to_compress,\
                             size_t block_size){
-    //if (to_compress->length() < (block_size * BYTES_PER_NUMBER)) {
-        //fix_size(to_compress, block_size);//fill with zeroes
-    //}
     std::list<uint32_t> nums;
-    fill_int_list(nums, to_compress);
+    fill_int_list(nums, to_compress, block_size);
     uint32_t reference = sub_smallest(nums);
     size_t bit_size = find_bits_to_represent_n(nums);
     std::vector<unsigned char> packed_bytes = pack(nums, bit_size);

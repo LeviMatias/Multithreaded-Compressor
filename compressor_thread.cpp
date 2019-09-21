@@ -19,12 +19,13 @@ void compressor_thread::join() {
 }
 
 void compressor_thread::_run(ProtectedFile &ifile, size_t block_size) {
-    int r = 0;
+    unsigned int r = 1;
     const size_t size = block_size * BYTES_PER_NUMBER;
-    while (r == 0){
+    while (r != 0){
         std::vector<char> blk(size,0);
         r = ifile.read(&blk[0], size, this->id);
-        if (r == 0){
+        if (r != 0){
+            blk.resize(r);
             CompressResult* res;
             //gets( or waits for) free cr
             int s = (*this->qs).get_empty(res);

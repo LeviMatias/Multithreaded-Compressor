@@ -29,7 +29,7 @@ int execute_program(int b, int t, int q, char* argv[]){
         for (int i=0; i<t; i++){
             //I need 2 separate loops because vector 3 can reposition
             //itself and break pointers inside thread
-            qs.push_back(result_queue(t));
+            qs.push_back(result_queue(q));
         }
         for (int i=0; i<t; i++){
             threads.push_back(compressor_thread(i, qs[i]));

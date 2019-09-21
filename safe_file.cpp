@@ -18,16 +18,16 @@ int ProtectedFile::open(const std::string& path){
     return 1;
 }
 
-int ProtectedFile::read(char* buffer, size_t size, unsigned int port){
+unsigned int ProtectedFile::read(char* buffer, size_t size, unsigned int port) {
     std::unique_lock<std::mutex> lock(this->m);
     while (this->current_access != port) this->cv.wait(lock);
-    int s = 0;
-    this->file.read(buffer, size);
+    unsigned int s = 0;
+    for (s =0; s<size && !this->eof(); s++){
+        this->file.read(buffer+s, 1);
+    }
     this->current_access++;
     this->current_access = this->current_access%this->access_points;
-    if (this->eof()){
-        s = -1;
-    }
+    if (this->eof() && s>0) s--;
     lock.unlock();
     cv.notify_all();
     return s;
