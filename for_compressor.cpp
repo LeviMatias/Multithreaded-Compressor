@@ -19,9 +19,11 @@ namespace {
         return count_bits(max);
     }
 
-    int sub_smallest(std::list<uint32_t> &nums) {
-        int min = *std::min_element(std::begin(nums), std::end(nums));
-        std::for_each(nums.begin(), nums.end(), [min](uint32_t &n){n -= min;});
+    uint32_t sub_smallest(std::list<uint32_t> &nums) {
+        uint32_t min = *std::min_element(std::begin(nums), std::end(nums));
+        std::for_each(nums.begin(), nums.end(), [min](uint32_t &n){
+            n -= min;
+        });
         return min;
     }
 
@@ -39,30 +41,46 @@ namespace {
         }
     }
 
-    std::vector<unsigned char> pack(std::list<uint32_t> &nums, size_t &bit_s){
+    unsigned char make_mask(int pos, int n){
+        //in big endian
+        unsigned char m = 0;
+        for(int i=0; i<n; i++){
+            m = m << 1;
+            m++;
+        }
+        m = m << (pos - n);
+        return  m;
+    }
+
+    std::vector<unsigned char> pack(std::list<uint32_t> &nums, const size_t bit_s){
         const int size = ceil(bit_s * nums.size() / BITS_IN_BYTE);
         std::vector<unsigned char> bytes_v(size, 0);
         unsigned int free_bits = BITS_IN_BYTE;
         int j = 0;
 
         std::for_each(nums.begin(), nums.end(), [&](uint32_t &n){
-                          unsigned int bits_to_mov = bit_s;
-                          auto nc = (unsigned char)n;
-                          while (bits_to_mov > 0) {
-                              unsigned int bits_movd;
-                              bits_movd = std::min(free_bits, bits_to_mov);
-                              nc = (nc << (free_bits - bits_movd));
-                              bytes_v[j] = bytes_v[j] | nc;
+            unsigned int bits_to_mov = bit_s;
+            uint32_t nc = n;
+            while (bits_to_mov > 0) {
+                unsigned int over_bits = std::max(bits_to_mov, (unsigned int)BITS_IN_BYTE) - 8;
+                unsigned int n = nc >> (over_bits);
+                unsigned int bits_mov = std::min(free_bits, bits_to_mov);
+                if (bit_s < BITS_IN_BYTE){
+                    n = n<<(free_bits - bits_mov);
+                    bytes_v[j] = bytes_v[j] | (n);
+                } else {
+                    bytes_v[j] = bytes_v[j] | (n >> (BITS_IN_BYTE - free_bits));
+                    nc = (nc << (bits_mov - over_bits));
+                }
 
-                              free_bits -= bits_movd;
-                              bits_to_mov -= bits_movd;
-                              if (free_bits == 0) {
-                                  free_bits = BITS_IN_BYTE;
-                                  j++;
-                              }
-                          }
-                      }
-        );
+                free_bits -= bits_mov;
+                bits_to_mov -= bits_mov;
+                if (free_bits == 0) {
+                  free_bits = BITS_IN_BYTE;
+                  j++;
+                }
+            }
+        });
         return bytes_v;
     }
 
@@ -75,5 +93,5 @@ void FoRCompressor::compress(compress_result &r, std::vector<char>\
     uint32_t reference = sub_smallest(nums);
     size_t bit_size = find_bits_to_represent_n(nums);
     std::vector<unsigned char> packed_bytes = pack(nums, bit_size);
-    r.set(reference, bit_size, packed_bytes);
+    r.set(htonl(reference), bit_size, packed_bytes);
 }
