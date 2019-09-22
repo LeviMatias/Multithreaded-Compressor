@@ -41,19 +41,8 @@ namespace {
         }
     }
 
-    unsigned char make_mask(int pos, int n){
-        //in big endian
-        unsigned char m = 0;
-        for(int i=0; i<n; i++){
-            m = m << 1;
-            m++;
-        }
-        m = m << (pos - n);
-        return  m;
-    }
-
     std::vector<unsigned char> pack(std::list<uint32_t> &nums, const size_t bit_s){
-        const int size = ceil(bit_s * nums.size() / BITS_IN_BYTE);
+        const int size = ceil((float)(bit_s * nums.size()) / (float)BITS_IN_BYTE);
         std::vector<unsigned char> bytes_v(size, 0);
         unsigned int free_bits = BITS_IN_BYTE;
         int j = 0;
