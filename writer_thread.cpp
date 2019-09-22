@@ -3,6 +3,7 @@
 //
 
 #include "writer_thread.h"
+#include <vector>
 
 writer_thread::writer_thread(safe_stream &stream, size_t block_size,\
                             std::vector<coordinated_queue<compress_result>>&qs)\
@@ -10,7 +11,7 @@ writer_thread::writer_thread(safe_stream &stream, size_t block_size,\
     this->qs.init(qs.size());
     for (auto & q : qs){
         this->qs.add_element(&q);
-    };
+    }
 }
 
 void writer_thread::_run(turn_scheduler &ts){

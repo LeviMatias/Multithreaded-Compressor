@@ -16,10 +16,15 @@ class turn_scheduler {
     void execute_next_turn();
 
 public:
+	//POS returns a pointer to a new turn in the queue
     turn* get_new_turn();
 
+    //PRE must be the holder of an active turn
+    //POS finish turn and get a new one
     turn* finish_and_queue_again();
 
+    //PRE must be the holder of an active turn
+    //POS finish turn
     void finish();
 };
 

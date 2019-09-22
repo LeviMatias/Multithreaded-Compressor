@@ -5,16 +5,16 @@
 #ifndef TP1_PROJECT_FOR_COMPRESSOR_H
 #define TP1_PROJECT_FOR_COMPRESSOR_H
 
+#include <arpa/inet.h>
+#include <vector>
 #include <list>
 #include <math.h>
 #include "compress_result.h"
-#include <winsock2.h>
 
 // frame of reference compressor
 class FoRCompressor {
     public:
     //PRE: to_compress contains the 4-byte numbers to be compress
-    //
     //POS compresses to_compress into compress_result r
     static void compress(compress_result &r, std::vector<char> &to_compress,\
                          size_t block_size);

@@ -7,7 +7,6 @@
 Thread::Thread(safe_stream &strm, size_t blk_size){
     this->stream = &strm;
     this->block_size = blk_size;
-
 }
 
 void Thread::run(turn_scheduler &ts) {

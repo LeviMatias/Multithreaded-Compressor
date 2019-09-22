@@ -3,6 +3,7 @@
 //
 
 #include "compressor_thread.h"
+#include <vector>
 
 compressor_thread::compressor_thread(safe_stream &stream, size_t block_size,\
                     coordinated_queue<compress_result> &rq, turn_scheduler &ts)\

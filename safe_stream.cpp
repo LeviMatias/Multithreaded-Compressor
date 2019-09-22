@@ -3,6 +3,7 @@
 //
 
 #include "safe_stream.h"
+#include <string>
 
 int safe_stream::open_read(const std::string& path){
     bool read_from_stdin = (strcmp(&path[0], "-") == 0);

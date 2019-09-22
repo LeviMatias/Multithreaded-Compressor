@@ -13,7 +13,6 @@
 template <class T>
 class coordinated_queue{
 private:
-
     std::mutex m;
     std::mutex m2;
     std::condition_variable get_cv;
@@ -27,32 +26,34 @@ public:
 
     coordinated_queue(const coordinated_queue& sq);
 
-    //[1] initializers:
-    //initializes #number_of_queues each with a unique id that
-    //goes from 0 to #number_of_queues-1
-
-    //POS [1]
+    //POS sets the max_elements of a queue
     void init(int max_elements);
 
-    //POS [1]
+    //POS sets the max_elements of a queue
     //also fills de queues with compress_result (could use a template)
     void init_full(int max_elements);
 
-    //POS: adds element to queue with the queue id
+    //POS: adds element to queue if enough space, otherwise yields
+    //until space is made or queue is closed
     void add_element(const T &result);
 
     //why use poinconst ter? its possi&ble that this function
     //fails to retrieve an element when the qs are closed and thread
     //is waiting in an empty queue
 
-    //POS: if successful elem points to element
-    //0 if s -1 if not
+    //POS: attemps to retrieve element from queue
+    //if queue is emtpy, yields until not empty
+    //if queue is closed, returns -1
+    //if successful elem points to element
+    //and returns 0
     int get_element(T* &elem);
 
+    //POS moves the front element to the back
     void move_front_to_back();
 
     void pop_element();
 
+    //closes the queue to signal no new elements will arrive
     void close_queue();
 
     //POS true when close_queue has been called once before

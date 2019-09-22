@@ -3,6 +3,7 @@
 //
 
 #include "compress_result.h"
+#include <vector>
 
 
 size_t get_size();

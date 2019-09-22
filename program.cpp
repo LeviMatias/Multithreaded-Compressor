@@ -3,6 +3,7 @@
 //
 
 #include "program.h"
+#include <vector>
 
 int Program::execute(const int b, const int t, const int q, char **argv) {
     safe_stream istream, ostream;
@@ -28,12 +29,12 @@ int Program::execute(const int b, const int t, const int q, char **argv) {
         writer_thread wr(ostream, b, qs);
         for (int i = 0; i<t; i++){
             threads[i].run(ts);
-        };
+        }
 
         wr.run(ts);
         for (int i = 0; i<t; i++){
             threads[i].join();
-        };
+        }
         wr.join();
 
         istream.close();

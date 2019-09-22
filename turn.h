@@ -18,11 +18,12 @@ public:
 
     turn(const turn &other);
 
-    //yields until execute is called
+    //POS yields until execute is called
     void wait_for_turn();
 
     //POS ends the wait for turn
     //turn, now used, should be discarded
+    //with the turn scheduler
     void execute();
 };
 

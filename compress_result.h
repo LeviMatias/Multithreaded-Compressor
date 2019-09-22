@@ -23,17 +23,22 @@ class compress_result {
     //the passing needs to be done bit to bit
     //neither guarantee elements are next to each other
     //solution vector char can receive multiple bits through masking
-    //con: harder to print to cout
     std::vector<unsigned char> packed_bytes;
 
     public:
     compress_result();
+
     compress_result(const compress_result &old_obj);
+
+    //POS sets the specified values to the result, packed_bytes is moved
     void set(uint32_t reference, unsigned char bit_size,\
             std::vector<unsigned char> &packed_bytes);
 
+    //PRE values must have been set previously
+    //POS writes result to buffer (buffer may be resized)
     void to_vector(std::vector<char> &buffer);
 
+    //POS returns size in bytes of the result
     size_t get_size();
 };
 

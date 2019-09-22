@@ -11,6 +11,7 @@
 
 class Program {
 public:
+	//executes the program
     static int execute(const int b, const int t, const int q, char* argv[]);
 };
 

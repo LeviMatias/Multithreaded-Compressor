@@ -8,6 +8,7 @@
 #include "safe_stream.h"
 #include "compress_result.h"
 #include "thread.h"
+#include <vector>
 
 class writer_thread : public Thread {
 private:

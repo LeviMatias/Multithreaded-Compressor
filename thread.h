@@ -21,12 +21,14 @@ private:
 protected:
     safe_stream*  get_stream();
     size_t get_blk_sz();
-public:
 
+public:
     explicit Thread(safe_stream &stream, size_t block_size);
 
+    //runs the thread
     void run(turn_scheduler &ts);
 
+    //joins the thread
     void join();
 };
 

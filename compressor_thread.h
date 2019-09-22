@@ -7,18 +7,18 @@
 
 #include "thread.h"
 #include "for_compressor.h"
+#include <vector>
 
 class compressor_thread : public Thread {
-    public:
+    private:
     coordinated_queue<compress_result> *q;
     turn* current_turn;
 
     virtual void _run(turn_scheduler &ts);
+    
     public:
-
     explicit compressor_thread(safe_stream &strm, size_t blk_size,\
     coordinated_queue<compress_result> &q, turn_scheduler &ts);
-
 };
 
 

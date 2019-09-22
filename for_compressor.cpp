@@ -3,9 +3,12 @@
 //
 
 #include "for_compressor.h"
+#include <algorithm>
+#include <vector>
+#include <list>
 
 namespace {
-    unsigned int count_bits( uint32_t n) {
+    unsigned int count_bits(uint32_t n){
         unsigned int count = 0;
         while (n) {
             n = n >> 1;
@@ -41,8 +44,10 @@ namespace {
         }
     }
 
-    std::vector<unsigned char> pack(std::list<uint32_t> &nums, const size_t bit_s){
-        const int size = ceil((float)(bit_s * nums.size()) / (float)BITS_IN_BYTE);
+    std::vector<unsigned char> pack(std::list<uint32_t> &nums,\
+                                    const size_t bit_s){
+        float f = (float)(bit_s * nums.size()) / (float)BITS_IN_BYTE;
+        const int size = ceil(f);
         std::vector<unsigned char> bytes_v(size, 0);
         unsigned int free_bits = BITS_IN_BYTE;
         int j = 0;
@@ -51,7 +56,8 @@ namespace {
             unsigned int bits_to_mov = bit_s;
             uint32_t nc = n;
             while (bits_to_mov > 0) {
-                unsigned int over_bits = std::max((int)(bits_to_mov - free_bits), 0);
+                 unsigned int over_bits = std::max(\
+                                    (int)(bits_to_mov - free_bits), 0);
                 unsigned int bits_mov = std::min(free_bits, bits_to_mov);
                 unsigned int n = nc >> (over_bits);
                 int dif = free_bits - bits_mov;

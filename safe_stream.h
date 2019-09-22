@@ -19,20 +19,22 @@ class safe_stream {
     std::fstream file;
 
     bool file_opened;
-    public:
 
-    //PRE attemps to open the file in path
+    public:
+    //PRE attemps to open the specified istream
     //POS 0 if successful
     int open_read(const std::string& path);
 
+    //PRE attemps to open the specified ostream
+    //POS 0 if successful
     int open_write(const std::string& path);
 
-    //PRE attemps to read the file accessing through the specified port if open
-    //or waiting until port is available
-    //POS 0 if successfully read, -1 otherwise
-    //if 0, it rotates the open port to the next one
+    //PRE reads from a previously successfully opened istream
+    //POS number of bytes read if s, 0 if eof
     unsigned int read(char* buffer, size_t size);
 
+    //PRE writes to a previously successfully opened istream
+    //POS 0 if s, 1 if not
     int write(char* buffer, size_t size);
 
     //POS true if file reached end
@@ -42,8 +44,6 @@ class safe_stream {
     void close();
 
     void release();
-
-
 };
 
 

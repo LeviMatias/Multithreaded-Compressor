@@ -17,7 +17,8 @@ int main(int argc, char* argv[]) {
         }
         if (s == 0 && (t < 0 || q < 0 || n < 0)) s = 1;
     } else {
-        std::cerr<<"Incorrect number of arguments: expected"<< EXPECTED_ARGC <<std::endl;
+        std::cerr<<"Incorrect number of arguments: expected"\
+                << EXPECTED_ARGC <<std::endl;
     }
 
     if (s == 0){
