@@ -9,7 +9,7 @@ int safe_stream::open_read(const std::string& path){
     if (read_from_stdin){
         this->istream = &std::cin;
     } else{
-        file.open(path, std::fstream::in);
+        file.open(path, std::fstream::in | std::ios_base::binary);
         if (!this->file.good()){
             std::cerr<<"failed to open the input stream"<<std::endl;
             return 1;

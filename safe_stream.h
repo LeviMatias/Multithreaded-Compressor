@@ -8,6 +8,7 @@
 #include <fstream>
 #include <mutex>
 #include <cstring>
+#include <string>
 
 class safe_stream {
     private:

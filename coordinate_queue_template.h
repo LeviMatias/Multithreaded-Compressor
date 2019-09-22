@@ -18,8 +18,6 @@ private:
     std::mutex m2;
     std::condition_variable get_cv;
     std::condition_variable put_cv;
-
-protected:
     unsigned int max_elements{};
     bool closed{};
     std::queue<T> queue;

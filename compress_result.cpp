@@ -19,7 +19,7 @@ compress_result::compress_result(const compress_result &old_obj) {
     this->bit_size = old_obj.bit_size;
 }
 
-void compress_result::set(uint32_t ref, unsigned char bs,\
+void compress_result::set(const uint32_t ref, const unsigned char bs,\
                         std::vector<unsigned char> &pb){
     this->reference = ref;
     this->bit_size = bs;

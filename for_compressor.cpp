@@ -51,16 +51,12 @@ namespace {
             unsigned int bits_to_mov = bit_s;
             uint32_t nc = n;
             while (bits_to_mov > 0) {
-                unsigned int over_bits = std::max(bits_to_mov, (unsigned int)BITS_IN_BYTE) - 8;
-                unsigned int n = nc >> (over_bits);
+                unsigned int over_bits = std::max((int)(bits_to_mov - free_bits), 0);
                 unsigned int bits_mov = std::min(free_bits, bits_to_mov);
-                if (bit_s < BITS_IN_BYTE){
-                    n = n<<(free_bits - bits_mov);
-                    bytes_v[j] = bytes_v[j] | (n);
-                } else {
-                    bytes_v[j] = bytes_v[j] | (n >> (BITS_IN_BYTE - free_bits));
-                    nc = (nc << (bits_mov - over_bits));
-                }
+                unsigned int n = nc >> (over_bits);
+                int dif = free_bits - bits_mov;
+                n = n<<(dif);
+                bytes_v[j] = bytes_v[j] | (n);
 
                 free_bits -= bits_mov;
                 bits_to_mov -= bits_mov;
