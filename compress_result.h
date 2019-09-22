@@ -7,7 +7,6 @@
 
 #include <vector>
 #include <string>
-#include <iostream>
 #include <algorithm>
 #include <utility>
 #include <cstring>
@@ -15,7 +14,7 @@
 #define BYTES_PER_NUMBER 4
 #define BITS_IN_BYTE 8
 
-class CompressResult {
+class compress_result {
     private:
     uint32_t reference;
     unsigned char bit_size;
@@ -26,25 +25,14 @@ class CompressResult {
     //solution vector char can receive multiple bits through masking
     //con: harder to print to cout
     std::vector<unsigned char> packed_bytes;
-    bool ready;
-    bool finished;
 
     public:
-    CompressResult();
-    CompressResult(const CompressResult &old_obj);
+    compress_result();
+    compress_result(const compress_result &old_obj);
     void set(uint32_t reference, unsigned char bit_size,\
             std::vector<unsigned char> &packed_bytes);
 
-    void print_to_cout();
     void to_vector(std::vector<char> &buffer);
-
-    bool is_ready();
-
-    bool is_finished();
-
-    void reset();
-
-    void finish();
 
     size_t get_size();
 };

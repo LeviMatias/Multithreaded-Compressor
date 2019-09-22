@@ -6,16 +6,17 @@
 #define TP1_PROJECT_WRITER_THREAD_H
 
 #include "safe_stream.h"
-#include "result_queue.h"
+#include "compress_result.h"
 #include "thread.h"
 
 class writer_thread : public Thread {
 private:
-    safe_queue<result_queue*> qs;
+    coordinated_queue<coordinated_queue<compress_result>*> qs;
 
     virtual void _run(turn_scheduler &ts);
 public:
-    explicit writer_thread(safe_stream &istream, size_t block_size, std::vector<result_queue> &qs);
+    explicit writer_thread(safe_stream &istream, size_t block_size,\
+                        std::vector<coordinated_queue<compress_result>> &qs);
 };
 
 

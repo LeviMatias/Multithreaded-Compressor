@@ -6,7 +6,7 @@
 #define TP1_PROJECT_TURN_SCHEDULER_H
 
 #include <list>
-#include "safe_queue_template.h"
+#include "coordinate_queue_template.h"
 #include "turn.h"
 
 class turn_scheduler {
@@ -16,9 +16,9 @@ class turn_scheduler {
     void execute_next_turn();
 
 public:
-    turn& get_new_turn();
+    turn* get_new_turn();
 
-    turn& finish_and_queue_again();
+    turn* finish_and_queue_again();
 
     void finish();
 };

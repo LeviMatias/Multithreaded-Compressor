@@ -11,7 +11,7 @@ int safe_stream::open_read(const std::string& path){
     } else{
         file.open(path, std::fstream::in);
         if (!this->file.good()){
-            printf("failed");
+            std::cerr<<"failed to open the input stream"<<std::endl;
             return 1;
         }
         this->istream = &file;
@@ -27,7 +27,7 @@ int safe_stream::open_write(const std::string& path){
     } else{
         file.open(path, std::fstream::out);
         if (!this->file.good()){
-            printf("failed");
+            std::cerr<<"failed to open the output stream"<<std::endl;
             return 1;
         }
         this->ostream = &file;

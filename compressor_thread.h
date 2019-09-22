@@ -5,18 +5,19 @@
 #ifndef TP1_PROJECT_COMPRESSOR_THREAD_H
 #define TP1_PROJECT_COMPRESSOR_THREAD_H
 
-#include "result_queue.h"
 #include "thread.h"
 #include "for_compressor.h"
 
 class compressor_thread : public Thread {
     public:
-    result_queue *qs;
+    coordinated_queue<compress_result> *q;
+    turn* current_turn;
 
     virtual void _run(turn_scheduler &ts);
     public:
 
-    explicit compressor_thread(safe_stream &strm, size_t blk_size, result_queue &qs);
+    explicit compressor_thread(safe_stream &strm, size_t blk_size,\
+    coordinated_queue<compress_result> &q, turn_scheduler &ts);
 
 };
 

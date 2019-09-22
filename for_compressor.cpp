@@ -14,8 +14,8 @@ namespace {
         return count;
     }
 
-    unsigned int find_bits_to_represent_n(std::list<uint32_t> &nums) {
-        unsigned int max = *std::max_element(std::begin(nums), std::end(nums));
+    unsigned int find_bits_to_represent_n(std::list<uint32_t> &ns) {
+        unsigned int max = *std::max_element(std::begin(ns), std::end(ns));
         return count_bits(max);
     }
 
@@ -25,7 +25,8 @@ namespace {
         return min;
     }
 
-    void fill_int_list(std::list<uint32_t> &list, std::vector<char> &source, size_t block_size){
+    void fill_int_list(std::list<uint32_t> &list, std::vector<char> &source,\
+    size_t block_size){
         unsigned int i,j;
         uint32_t v = 0;
         for (i = 0; i < source.size(); i += BYTES_PER_NUMBER) {
@@ -38,14 +39,14 @@ namespace {
         }
     }
 
-    std::vector<unsigned char> pack(std::list<uint32_t> &nums, size_t &bit_size){
-        const int size = ceil(bit_size * nums.size() / BITS_IN_BYTE);
+    std::vector<unsigned char> pack(std::list<uint32_t> &nums, size_t &bit_s){
+        const int size = ceil(bit_s * nums.size() / BITS_IN_BYTE);
         std::vector<unsigned char> bytes_v(size, 0);
         unsigned int free_bits = BITS_IN_BYTE;
         int j = 0;
 
         std::for_each(nums.begin(), nums.end(), [&](uint32_t &n){
-                          unsigned int bits_to_mov = bit_size;
+                          unsigned int bits_to_mov = bit_s;
                           auto nc = (unsigned char)n;
                           while (bits_to_mov > 0) {
                               unsigned int bits_movd;
@@ -67,8 +68,8 @@ namespace {
 
 }
 
-void FoRCompressor::compress(CompressResult &r, std::vector<char> &to_compress,\
-                            size_t block_size){
+void FoRCompressor::compress(compress_result &r, std::vector<char>\
+        &to_compress,size_t block_size){
     std::list<uint32_t> nums;
     fill_int_list(nums, to_compress, block_size);
     uint32_t reference = sub_smallest(nums);

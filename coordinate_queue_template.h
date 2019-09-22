@@ -11,7 +11,7 @@
 
 
 template <class T>
-class safe_queue{
+class coordinated_queue{
 private:
 
     std::mutex m;
@@ -25,9 +25,9 @@ protected:
     std::queue<T> queue;
 
 public:
-    safe_queue();
+    coordinated_queue();
 
-    safe_queue(const safe_queue& sq);
+    coordinated_queue(const coordinated_queue& sq);
 
     //[1] initializers:
     //initializes #number_of_queues each with a unique id that
@@ -53,8 +53,6 @@ public:
 
     void move_front_to_back();
 
-    //pops element in queue
-    //because each thread has its own queue, no protection is needed
     void pop_element();
 
     void close_queue();
@@ -68,14 +66,14 @@ public:
 };
 
 template <class T>
-void safe_queue<T>::init(const int max_elements) {
+void coordinated_queue<T>::init(const int max_elements) {
     this->max_elements = max_elements;
     this->closed = false;
     this->queue = std::queue<T>();
 }
 
 template <class T>
-void safe_queue<T>::init_full(const int max_elements) {
+void coordinated_queue<T>::init_full(const int max_elements) {
     this->init(max_elements);
     for (int j=0; j<max_elements; j++){
         this->queue.push(T());
@@ -83,7 +81,7 @@ void safe_queue<T>::init_full(const int max_elements) {
 }
 
 template <class T>
-void safe_queue<T>::add_element(const T& result) {
+void coordinated_queue<T>::add_element(const T& result) {
     std::unique_lock<std::mutex> lock(this->m2);
     while (this->queue.size() == this->max_elements) {
         if (is_closed()) return;
@@ -95,7 +93,7 @@ void safe_queue<T>::add_element(const T& result) {
 }
 
 template <class T>
-int safe_queue<T>::get_element(T* &elem) {
+int coordinated_queue<T>::get_element(T* &elem) {
     std::unique_lock<std::mutex> lock(this->m);
     while (this->queue.empty()) {
         if (is_closed()) return 1;
@@ -108,7 +106,7 @@ int safe_queue<T>::get_element(T* &elem) {
 }
 
 template <class T>
-void safe_queue<T>::pop_element() {
+void coordinated_queue<T>::pop_element() {
     if (!this->queue.empty()){
         this->queue.pop();
         put_cv.notify_all();
@@ -116,43 +114,43 @@ void safe_queue<T>::pop_element() {
 }
 
 template <class T>
-void safe_queue<T>::close_queue() {
+void coordinated_queue<T>::close_queue() {
     this->closed = true;
     this->get_cv.notify_all();
     this->put_cv.notify_all();
 }
 
 template <class T>
-bool safe_queue<T>::is_closed(){
+bool coordinated_queue<T>::is_closed(){
     return (this->closed);
 }
 
 template <class T>
-bool safe_queue<T>::is_empty(){
+bool coordinated_queue<T>::is_empty(){
     return this->queue.empty();
 }
 
 template <class T>
-void safe_queue<T>::release() {
+void coordinated_queue<T>::release() {
     //nothing to release;
 }
 
 template<class T>
-safe_queue<T>::safe_queue(const safe_queue &sq) {
+coordinated_queue<T>::coordinated_queue(const coordinated_queue &sq) {
     this->max_elements = sq.max_elements;
     this->closed = sq.closed;
     this->queue = sq.queue;
 }
 
 template<class T>
-safe_queue<T>::safe_queue() {
+coordinated_queue<T>::coordinated_queue() {
     this->queue = std::queue<T>();
     this->max_elements = 0;
     this->closed = false;
 }
 
 template<class T>
-void safe_queue<T>::move_front_to_back(){
+void coordinated_queue<T>::move_front_to_back(){
     T elem = this->queue.front();
     this->queue.pop();
     this->queue.push(elem);
