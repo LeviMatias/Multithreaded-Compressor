@@ -37,7 +37,8 @@ int safe_stream::open_write(const std::string& path){
     return 0;
 }
 
-unsigned int safe_stream::read(char* buffer,const int index, const size_t size){
+unsigned int safe_stream::read(char* buffer, const unsigned  int index,\
+                            const size_t size){
     std::unique_lock<std::mutex> lock(this->m);
     unsigned int s = 0;
     istream->seekg(index, std::ios::beg);

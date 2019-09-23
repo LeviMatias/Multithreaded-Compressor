@@ -13,7 +13,6 @@ int Program::execute(const int b, const int t, const int q, char **argv) {
     if (s == 0) s = ostream.open_write(argv[5]);
 
     if (s==0){
-        turn_scheduler ts;
         std::vector<compressor_thread> threads;
         std::vector<coordinated_queue<compress_result>> qs;
 

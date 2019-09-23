@@ -8,6 +8,7 @@
 #include "thread.h"
 #include "for_compressor.h"
 #include <vector>
+#include "coordinate_queue_template.h"
 
 class compressor_thread : public Thread {
     private:

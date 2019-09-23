@@ -17,8 +17,8 @@ void compressor_thread::_run(const int order, const int total_threads) {
     const size_t size = this->get_blk_sz() * BYTES_PER_NUMBER;
     while (r != 0){
         std::vector<char> blk(size,0);
-        unsigned int index = (total_threads*i + order - 1)*size;
-        r = this->get_stream()->read(&blk[0], index, size);
+        unsigned int index = (total_threads*i + order)*size;
+        r = this->get_stream()->read(blk.data(), index, size);
         if (r != 0){
             blk.resize(r);
             (*this->q).add_element(FoRCompressor::compress\

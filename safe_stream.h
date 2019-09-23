@@ -32,7 +32,7 @@ class safe_stream {
     //PRE reads from a previously successfully opened istream
     //starting from index position in the file
     //POS returns number of bytes read if s, 0 if eof reached
-    unsigned int read(char* buffer, int index, size_t size);
+    unsigned int read(char* buffer, unsigned int index, size_t size);
 
     //PRE writes to a previously successfully opened istream
     //POS 0 if s, 1 if not

@@ -9,6 +9,7 @@
 #include "compress_result.h"
 #include "thread.h"
 #include <vector>
+#include "coordinate_queue_template.h"
 
 class writer_thread : public Thread {
 private:
