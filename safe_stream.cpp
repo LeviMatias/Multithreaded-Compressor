@@ -37,9 +37,10 @@ int safe_stream::open_write(const std::string& path){
     return 0;
 }
 
-unsigned int safe_stream::read(char* buffer, size_t size) {
+unsigned int safe_stream::read(char* buffer,const int index, const size_t size){
     std::unique_lock<std::mutex> lock(this->m);
     unsigned int s = 0;
+    istream->seekg(index, std::ios::beg);
     for (s =0; s<size && !this->eof(); s++){
         this->istream->read(buffer+s, 1);
     }
@@ -47,7 +48,7 @@ unsigned int safe_stream::read(char* buffer, size_t size) {
     return s;
 }
 
-int safe_stream::write(char* buffer, size_t size){
+int safe_stream::write(char* buffer, const size_t size){
     std::unique_lock<std::mutex> lock(this->m);
     this->ostream->write(buffer, size);
     return 0;

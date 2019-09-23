@@ -30,8 +30,9 @@ class safe_stream {
     int open_write(const std::string& path);
 
     //PRE reads from a previously successfully opened istream
-    //POS number of bytes read if s, 0 if eof
-    unsigned int read(char* buffer, size_t size);
+    //starting from index position in the file
+    //POS returns number of bytes read if s, 0 if eof reached
+    unsigned int read(char* buffer, int index, size_t size);
 
     //PRE writes to a previously successfully opened istream
     //POS 0 if s, 1 if not

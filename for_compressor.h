@@ -16,8 +16,8 @@ class FoRCompressor {
     public:
     //PRE: to_compress contains the 4-byte numbers to be compress
     //POS compresses to_compress into compress_result r
-    static void compress(compress_result &r, std::vector<char> &to_compress,\
-                         size_t block_size);
+    static compress_result compress(std::vector<char> &to_compress,\
+                                    size_t block_size);
 };
 
 

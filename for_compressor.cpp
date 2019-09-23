@@ -77,12 +77,14 @@ namespace {
 
 }
 
-void FoRCompressor::compress(compress_result &r, std::vector<char>\
-        &to_compress,size_t block_size){
+compress_result FoRCompressor::compress(std::vector<char>\
+                        &to_compress,size_t block_size){
     std::list<uint32_t> nums;
     fill_int_list(nums, to_compress, block_size);
     uint32_t reference = sub_smallest(nums);
     size_t bit_size = find_bits_to_represent_n(nums);
     std::vector<unsigned char> packed_bytes = pack(nums, bit_size);
+    compress_result r;
     r.set(htonl(reference), bit_size, packed_bytes);
+    return r;
 }

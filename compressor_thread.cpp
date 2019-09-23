@@ -6,30 +6,25 @@
 #include <vector>
 
 compressor_thread::compressor_thread(safe_stream &stream, size_t block_size,\
-                    coordinated_queue<compress_result> &rq, turn_scheduler &ts)\
+                    coordinated_queue<compress_result> &rq)\
                     : Thread(stream, block_size){
     this->q = &rq;
-    this->current_turn = ts.get_new_turn();
 }
 
-void compressor_thread::_run(turn_scheduler &ts) {
+void compressor_thread::_run(const int order, const int total_threads) {
     unsigned int r = 1;
+    unsigned int i = 0;
     const size_t size = this->get_blk_sz() * BYTES_PER_NUMBER;
     while (r != 0){
         std::vector<char> blk(size,0);
-        current_turn->wait_for_turn();
-        r = this->get_stream()->read(&blk[0], size);
+        unsigned int index = (total_threads*i + order - 1)*size;
+        r = this->get_stream()->read(&blk[0], index, size);
         if (r != 0){
-            //read successful, lets queue again
-            current_turn = ts.finish_and_queue_again();
             blk.resize(r);
-            compress_result res;
-            FoRCompressor::compress(res, blk, this->get_blk_sz());
-            (*this->q).add_element(res);
-        } else {
-            //we couldnt read, so lets leave the queue for good
-            ts.finish();
+            (*this->q).add_element(FoRCompressor::compress\
+                                (blk, this->get_blk_sz()));
         }
+        i++;
     }
     (*this->q).close_queue();
 }

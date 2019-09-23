@@ -8,7 +8,6 @@
 
 #include <thread>
 #include "safe_stream.h"
-#include "turn_scheduler.h"
 
 class Thread {
 private:
@@ -16,7 +15,7 @@ private:
     safe_stream* stream;
     size_t block_size;
 
-    virtual void _run(turn_scheduler &ts) = 0;
+    virtual void _run(int order, int total_threads) = 0;
 
 protected:
     safe_stream*  get_stream();
@@ -25,8 +24,8 @@ protected:
 public:
     explicit Thread(safe_stream &stream, size_t block_size);
 
-    //runs the thread
-    void run(turn_scheduler &ts);
+    //runs the thread with the specified id
+    void run(int order, int total_threads);
 
     //joins the thread
     void join();

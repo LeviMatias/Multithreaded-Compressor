@@ -14,7 +14,7 @@ class writer_thread : public Thread {
 private:
     coordinated_queue<coordinated_queue<compress_result>*> qs;
 
-    virtual void _run(turn_scheduler &ts);
+    virtual void _run(int order, int total_threads);
 public:
     explicit writer_thread(safe_stream &istream, size_t block_size,\
                         std::vector<coordinated_queue<compress_result>> &qs);

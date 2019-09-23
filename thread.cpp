@@ -4,13 +4,13 @@
 
 #include "thread.h"
 
-Thread::Thread(safe_stream &strm, size_t blk_size){
+Thread::Thread(safe_stream &strm, const size_t blk_size){
     this->stream = &strm;
     this->block_size = blk_size;
 }
 
-void Thread::run(turn_scheduler &ts) {
-    this->thread = std::thread(&Thread::_run, this, std::ref(ts));
+void Thread::run(const int order, const int total_threads) {
+    this->thread = std::thread(&Thread::_run, this, order, total_threads);
 }
 
 void Thread::join() {

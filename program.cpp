@@ -24,14 +24,14 @@ int Program::execute(const int b, const int t, const int q, char **argv) {
             qs[i].init(q);
         }
         for (int i=0; i<t; i++){
-            threads.emplace_back(compressor_thread(istream, b, qs[i], ts));
+            threads.emplace_back(compressor_thread(istream, b, qs[i]));
         }
         writer_thread wr(ostream, b, qs);
         for (int i = 0; i<t; i++){
-            threads[i].run(ts);
+            threads[i].run(i, t);
         }
 
-        wr.run(ts);
+        wr.run(0, 1);
         for (int i = 0; i<t; i++){
             threads[i].join();
         }

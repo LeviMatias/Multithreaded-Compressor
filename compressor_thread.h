@@ -12,13 +12,12 @@
 class compressor_thread : public Thread {
     private:
     coordinated_queue<compress_result> *q;
-    turn* current_turn;
 
-    virtual void _run(turn_scheduler &ts);
+    virtual void _run(int id, int total_threads);
     
     public:
     explicit compressor_thread(safe_stream &strm, size_t blk_size,\
-    coordinated_queue<compress_result> &q, turn_scheduler &ts);
+    coordinated_queue<compress_result> &q);
 };
 
 

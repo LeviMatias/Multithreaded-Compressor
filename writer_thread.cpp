@@ -14,7 +14,7 @@ writer_thread::writer_thread(safe_stream &stream, size_t block_size,\
     }
 }
 
-void writer_thread::_run(turn_scheduler &ts){
+void writer_thread::_run(const int order, const int total_threads){
     int s = 0;
     //I can use is_empty without fear because this q is never added to again
     while (!this->qs.is_empty()){
