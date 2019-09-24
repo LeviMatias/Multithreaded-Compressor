@@ -5,6 +5,11 @@
 #include "safe_stream.h"
 #include <string>
 
+SafeStream::SafeStream(){
+    this->ifile_opened = false;
+    this->ofile_opened = false;
+}
+
 int SafeStream::OpenRead(const std::string& path){
     bool read_from_stdin = (strcmp(&path[0], "-") == 0);
     if (this->ifile_opened) CloseInput();
@@ -39,22 +44,19 @@ int SafeStream::OpenWrite(const std::string& path){
     return 0;
 }
 
-int SafeStream::Read(char* buffer, unsigned  int index,\
-                            size_t size){
+unsigned int SafeStream::Read(char* buffer, const unsigned int index,\
+                            const size_t size){
     std::unique_lock<std::mutex> lock(this->m);
-    int s = 0;
+    if (this->EoF()) istream->clear();
+    unsigned int s = 0;
     istream->seekg(index, std::istream::beg);
-    for (s =0; s<size && !this->EoF(); s++){
-        this->istream->read(buffer+s, 1);
-    }
-    if (this->EoF() && s>0) {
-        s -= 1;
-        s = -s;
+    while (s<size && (istream->read(buffer+s,1))){
+        s++;
     }
     return s;
 }
 
-int SafeStream::Write(char* buffer, size_t size){
+int SafeStream::Write(char* buffer, const size_t size){
     std::unique_lock<std::mutex> lock(this->m);
     this->ostream->write(buffer, size);
     return 0;

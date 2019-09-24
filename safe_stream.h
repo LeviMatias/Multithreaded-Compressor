@@ -23,6 +23,7 @@ class SafeStream {
     bool ofile_opened;
 
     public:
+    SafeStream();
     ~SafeStream();
 
     //PRE attemps to open the specified istream
@@ -37,15 +38,16 @@ class SafeStream {
 
     //PRE reads from a previously successfully opened istream
     //starting from index position in the file
-    //POS returns number of bytes read
-    //if EoF was reached, the number returned is multiplied by -1
-    int Read(char* buffer, unsigned int index, size_t size);
+    //POS returns number of bytes read if s
+    // if the return value is less than size, then EoF was reached
+    unsigned int Read(char* buffer, unsigned int index, size_t size);
 
     //PRE writes to a previously successfully opened istream
     //POS 0 if s, 1 if not
     int Write(char* buffer, size_t size);
 
-    //POS true if file reached end
+    //PRE open an istream
+    //POS true if istream reached end
     bool EoF();
 
     //POS closes all opened files (if any)
