@@ -7,32 +7,34 @@
 
 int safe_stream::open_read(const std::string& path){
     bool read_from_stdin = (strcmp(&path[0], "-") == 0);
+    if (this->ifile_opened) close_input();
     if (read_from_stdin){
         this->istream = &std::cin;
     } else{
-        file.open(path, std::fstream::in | std::ios_base::binary);
-        if (!this->file.good()){
+        ifile.open(path, std::fstream::in | std::ios_base::binary);
+        if (!this->ifile.good()){
             std::cerr<<"failed to open the input stream"<<std::endl;
             return 1;
         }
-        this->istream = &file;
-        this->file_opened = true;
+        this->istream = &ifile;
+        this->ifile_opened = true;
     }
     return 0;
 }
 
 int safe_stream::open_write(const std::string& path){
     bool read_from_stdin = (strcmp(&path[0], "-") == 0);
+    if (this->ofile_opened) close_output();
     if (read_from_stdin){
         this->ostream = &std::cout;
     } else{
-        file.open(path, std::fstream::out);
-        if (!this->file.good()){
+        ofile.open(path, std::fstream::out);
+        if (!this->ofile.good()){
             std::cerr<<"failed to open the output stream"<<std::endl;
             return 1;
         }
-        this->ostream = &file;
-        this->file_opened = true;
+        this->ostream = &ofile;
+        this->ofile_opened = true;
     }
     return 0;
 }
@@ -60,9 +62,31 @@ bool safe_stream::eof(){
 }
 
 void safe_stream::close(){
-    if (!this->file_opened) this->file.close();
+    if (this->ifile_opened){
+        this->ifile.close();
+        this->ifile_opened = false;
+    }
+    if (this->ofile_opened){
+        this->ofile.close();
+        this->ofile_opened = false;
+    }
 }
 
-void safe_stream::release() {
-    //nothing to do
+safe_stream::~safe_stream(){
+    this->close();
 }
+
+void safe_stream::close_output(){
+    if (this->ofile_opened){
+        this->ofile.close();
+        this->ofile_opened = false;
+    }
+}
+
+void safe_stream::close_input(){
+    if (this->ifile_opened){
+        this->ifile.close();
+        this->ifile_opened = false;
+    }
+}
+

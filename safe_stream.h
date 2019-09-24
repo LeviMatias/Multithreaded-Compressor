@@ -16,17 +16,23 @@ class safe_stream {
     std::istream*  istream;
     std::ostream* ostream;
 
-    std::fstream file;
+    std::fstream ifile;
+    std::fstream ofile;
 
-    bool file_opened;
+    bool ifile_opened;
+    bool ofile_opened;
 
     public:
+    ~safe_stream();
+
     //PRE attemps to open the specified istream
     //POS 0 if successful
+    //if there already was an ifile open, it closes it
     int open_read(const std::string& path);
 
     //PRE attemps to open the specified ostream
     //POS 0 if successful
+    //if there already was an ofile open, it closes it
     int open_write(const std::string& path);
 
     //PRE reads from a previously successfully opened istream
@@ -41,10 +47,16 @@ class safe_stream {
     //POS true if file reached end
     bool eof();
 
-    //POS closes the file
+    //POS closes all opened files (if any)
     void close();
 
-    void release();
+    //PRE a file was opened for output
+    //POS closes the file
+    void close_output();
+
+    //PRE a file was opened for input
+    //POS closes the file
+    void close_input();
 };
 
 
