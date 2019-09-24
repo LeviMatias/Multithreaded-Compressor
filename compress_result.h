@@ -14,7 +14,7 @@
 #define BYTES_PER_NUMBER 4
 #define BITS_IN_BYTE 8
 
-class compress_result {
+class CompressResult {
     private:
     uint32_t reference;
     unsigned char bit_size;
@@ -26,9 +26,9 @@ class compress_result {
     std::vector<unsigned char> packed_bytes;
 
     public:
-    compress_result();
+    CompressResult();
 
-    compress_result(const compress_result &old_obj);
+    CompressResult(const CompressResult &old_obj);
 
     //POS sets the specified values to the result, packed_bytes is moved
     void set(uint32_t reference, unsigned char bit_size,\

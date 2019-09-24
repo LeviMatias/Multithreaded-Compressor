@@ -11,7 +11,7 @@
 
 
 template <class T>
-class coordinated_queue{
+class CoordinatedQueue{
 private:
     std::mutex m;
     std::mutex m2;
@@ -22,15 +22,15 @@ private:
     std::queue<T> queue;
 
 public:
-    coordinated_queue();
+    CoordinatedQueue();
 
-    coordinated_queue(const coordinated_queue& sq);
+    CoordinatedQueue(const CoordinatedQueue& sq);
 
     //POS sets the max_elements of a queue
     void init(int max_elements);
 
     //POS sets the max_elements of a queue
-    //also fills de queues with compress_result (could use a template)
+    //also fills de queues with CompressResult (could use a template)
     void init_full(int max_elements);
 
     //POS: adds element to queue if enough space, otherwise yields
@@ -65,14 +65,14 @@ public:
 };
 
 template <class T>
-void coordinated_queue<T>::init(const int max_elements) {
+void CoordinatedQueue<T>::init(const int max_elements) {
     this->max_elements = max_elements;
     this->closed = false;
     this->queue = std::queue<T>();
 }
 
 template <class T>
-void coordinated_queue<T>::init_full(const int max_elements) {
+void CoordinatedQueue<T>::init_full(const int max_elements) {
     this->init(max_elements);
     for (int j=0; j<max_elements; j++){
         this->queue.push(T());
@@ -80,7 +80,7 @@ void coordinated_queue<T>::init_full(const int max_elements) {
 }
 
 template <class T>
-void coordinated_queue<T>::add_element(const T& result) {
+void CoordinatedQueue<T>::add_element(const T& result) {
     std::unique_lock<std::mutex> lock(this->m2);
     while (this->queue.size() == this->max_elements) {
         if (is_closed()) return;
@@ -92,7 +92,7 @@ void coordinated_queue<T>::add_element(const T& result) {
 }
 
 template <class T>
-int coordinated_queue<T>::get_element(T* &elem) {
+int CoordinatedQueue<T>::get_element(T* &elem) {
     std::unique_lock<std::mutex> lock(this->m);
     while (this->queue.empty()) {
         if (is_closed()) return 1;
@@ -105,7 +105,7 @@ int coordinated_queue<T>::get_element(T* &elem) {
 }
 
 template <class T>
-void coordinated_queue<T>::pop_element() {
+void CoordinatedQueue<T>::pop_element() {
     if (!this->queue.empty()){
         this->queue.pop();
         put_cv.notify_all();
@@ -113,43 +113,43 @@ void coordinated_queue<T>::pop_element() {
 }
 
 template <class T>
-void coordinated_queue<T>::close_queue() {
+void CoordinatedQueue<T>::close_queue() {
     this->closed = true;
     this->get_cv.notify_all();
     this->put_cv.notify_all();
 }
 
 template <class T>
-bool coordinated_queue<T>::is_closed(){
+bool CoordinatedQueue<T>::is_closed(){
     return (this->closed);
 }
 
 template <class T>
-bool coordinated_queue<T>::is_empty(){
+bool CoordinatedQueue<T>::is_empty(){
     return this->queue.empty();
 }
 
 template <class T>
-void coordinated_queue<T>::release() {
+void CoordinatedQueue<T>::release() {
     //nothing to release;
 }
 
 template<class T>
-coordinated_queue<T>::coordinated_queue(const coordinated_queue &sq) {
+CoordinatedQueue<T>::CoordinatedQueue(const CoordinatedQueue &sq) {
     this->max_elements = sq.max_elements;
     this->closed = sq.closed;
     this->queue = sq.queue;
 }
 
 template<class T>
-coordinated_queue<T>::coordinated_queue() {
+CoordinatedQueue<T>::CoordinatedQueue() {
     this->queue = std::queue<T>();
     this->max_elements = 0;
     this->closed = false;
 }
 
 template<class T>
-void coordinated_queue<T>::move_front_to_back(){
+void CoordinatedQueue<T>::move_front_to_back(){
     T elem = this->queue.front();
     this->queue.pop();
     this->queue.push(elem);

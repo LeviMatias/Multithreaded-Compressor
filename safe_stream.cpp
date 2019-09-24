@@ -5,7 +5,7 @@
 #include "safe_stream.h"
 #include <string>
 
-int safe_stream::open_read(const std::string& path){
+int SafeStream::open_read(const std::string& path){
     bool read_from_stdin = (strcmp(&path[0], "-") == 0);
     if (this->ifile_opened) close_input();
     if (read_from_stdin){
@@ -22,7 +22,7 @@ int safe_stream::open_read(const std::string& path){
     return 0;
 }
 
-int safe_stream::open_write(const std::string& path){
+int SafeStream::open_write(const std::string& path){
     bool read_from_stdin = (strcmp(&path[0], "-") == 0);
     if (this->ofile_opened) close_output();
     if (read_from_stdin){
@@ -39,7 +39,7 @@ int safe_stream::open_write(const std::string& path){
     return 0;
 }
 
-unsigned int safe_stream::read(char* buffer, const unsigned  int index,\
+unsigned int SafeStream::read(char* buffer, const unsigned  int index,\
                             const size_t size){
     std::unique_lock<std::mutex> lock(this->m);
     unsigned int s = 0;
@@ -51,17 +51,17 @@ unsigned int safe_stream::read(char* buffer, const unsigned  int index,\
     return s;
 }
 
-int safe_stream::write(char* buffer, const size_t size){
+int SafeStream::write(char* buffer, const size_t size){
     std::unique_lock<std::mutex> lock(this->m);
     this->ostream->write(buffer, size);
     return 0;
 }
 
-bool safe_stream::eof(){
+bool SafeStream::eof(){
     return this->istream->eof();
 }
 
-void safe_stream::close(){
+void SafeStream::close(){
     if (this->ifile_opened){
         this->ifile.close();
         this->ifile_opened = false;
@@ -72,18 +72,18 @@ void safe_stream::close(){
     }
 }
 
-safe_stream::~safe_stream(){
+SafeStream::~SafeStream(){
     this->close();
 }
 
-void safe_stream::close_output(){
+void SafeStream::close_output(){
     if (this->ofile_opened){
         this->ofile.close();
         this->ofile_opened = false;
     }
 }
 
-void safe_stream::close_input(){
+void SafeStream::close_input(){
     if (this->ifile_opened){
         this->ifile.close();
         this->ifile_opened = false;

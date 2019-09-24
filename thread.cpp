@@ -4,7 +4,7 @@
 
 #include "thread.h"
 
-Thread::Thread(safe_stream &strm, const size_t blk_size){
+Thread::Thread(SafeStream &strm, const size_t blk_size){
     this->stream = &strm;
     this->block_size = blk_size;
 }
@@ -17,7 +17,7 @@ void Thread::join() {
     this->thread.join();
 }
 
-safe_stream *Thread::get_stream() {
+SafeStream *Thread::get_stream() {
     return this->stream;
 }
 

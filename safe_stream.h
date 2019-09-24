@@ -10,7 +10,7 @@
 #include <cstring>
 #include <string>
 
-class safe_stream {
+class SafeStream {
     private:
     std::mutex m;
     std::istream*  istream;
@@ -23,7 +23,7 @@ class safe_stream {
     bool ofile_opened;
 
     public:
-    ~safe_stream();
+    ~SafeStream();
 
     //PRE attemps to open the specified istream
     //POS 0 if successful

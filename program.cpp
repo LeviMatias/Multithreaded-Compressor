@@ -6,26 +6,26 @@
 #include <vector>
 
 int Program::execute(const int b, const int t, const int q, char **argv) {
-    safe_stream istream, ostream;
+    SafeStream istream, ostream;
     int s = 0;
 
     s = istream.open_read(argv[4]);
     if (s == 0) s = ostream.open_write(argv[5]);
 
     if (s==0){
-        std::vector<compressor_thread> threads;
-        std::vector<coordinated_queue<compress_result>> qs;
+        std::vector<CompressorThread> threads;
+        std::vector<CoordinatedQueue<CompressResult>> qs;
 
         for (int i=0; i<t; i++){
             //I need 2 separate loops because vector 3 can reposition
             //itself and break pointers
-            qs.emplace_back(coordinated_queue<compress_result>());
+            qs.emplace_back(CoordinatedQueue<CompressResult>());
             qs[i].init(q);
         }
         for (int i=0; i<t; i++){
-            threads.emplace_back(compressor_thread(istream, b, qs[i]));
+            threads.emplace_back(CompressorThread(istream, b, qs[i]));
         }
-        writer_thread wr(ostream, b, qs);
+        WriterThread wr(ostream, b, qs);
         for (int i = 0; i<t; i++){
             threads[i].run(i, t);
         }

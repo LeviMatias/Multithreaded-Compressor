@@ -5,8 +5,8 @@
 #include "writer_thread.h"
 #include <vector>
 
-writer_thread::writer_thread(safe_stream &stream, size_t block_size,\
-                            std::vector<coordinated_queue<compress_result>>&qs)\
+WriterThread::WriterThread(SafeStream &stream, size_t block_size,\
+                            std::vector<CoordinatedQueue<CompressResult>>&qs)\
                             : Thread(stream, block_size) {
     this->qs.init(qs.size());
     for (auto & q : qs){
@@ -14,14 +14,14 @@ writer_thread::writer_thread(safe_stream &stream, size_t block_size,\
     }
 }
 
-void writer_thread::_run(const int order, const int total_threads){
+void WriterThread::_run(const int order, const int total_threads){
     int s = 0;
     //I can use is_empty without fear because this q is never added to again
     while (!this->qs.is_empty()){
-       coordinated_queue<compress_result> **q;
+       CoordinatedQueue<CompressResult> **q;
        s = this->qs.get_element(q);
        if (s == 0){
-            compress_result* res;
+            CompressResult* res;
             s = (*q)->get_element(res);
             if (s==0){
                 std::vector<char> msg;

@@ -11,14 +11,14 @@
 #include <vector>
 #include "coordinate_queue_template.h"
 
-class writer_thread : public Thread {
+class WriterThread : public Thread {
 private:
-    coordinated_queue<coordinated_queue<compress_result>*> qs;
+    CoordinatedQueue<CoordinatedQueue<CompressResult>*> qs;
 
     virtual void _run(int order, int total_threads);
 public:
-    explicit writer_thread(safe_stream &istream, size_t block_size,\
-                        std::vector<coordinated_queue<compress_result>> &qs);
+    explicit WriterThread(SafeStream &istream, size_t block_size,\
+                        std::vector<CoordinatedQueue<CompressResult>> &qs);
 };
 
 

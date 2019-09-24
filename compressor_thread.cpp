@@ -5,13 +5,13 @@
 #include "compressor_thread.h"
 #include <vector>
 
-compressor_thread::compressor_thread(safe_stream &stream, size_t block_size,\
-                    coordinated_queue<compress_result> &rq)\
+CompressorThread::CompressorThread(SafeStream &stream, size_t block_size,\
+                    CoordinatedQueue<CompressResult> &rq)\
                     : Thread(stream, block_size){
     this->q = &rq;
 }
 
-void compressor_thread::_run(const int order, const int total_threads) {
+void CompressorThread::_run(const int order, const int total_threads) {
     unsigned int r = 1;
     unsigned int i = 0;
     const size_t size = this->get_blk_sz() * BYTES_PER_NUMBER;

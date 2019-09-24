@@ -10,15 +10,15 @@
 #include <vector>
 #include "coordinate_queue_template.h"
 
-class compressor_thread : public Thread {
+class CompressorThread : public Thread {
     private:
-    coordinated_queue<compress_result> *q;
+    CoordinatedQueue<CompressResult> *q;
 
     virtual void _run(int id, int total_threads);
     
     public:
-    explicit compressor_thread(safe_stream &strm, size_t blk_size,\
-    coordinated_queue<compress_result> &q);
+    explicit CompressorThread(SafeStream &strm, size_t blk_size,\
+    CoordinatedQueue<CompressResult> &q);
 };
 
 
