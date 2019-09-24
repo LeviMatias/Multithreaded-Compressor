@@ -5,12 +5,12 @@
 #include "program.h"
 #include <vector>
 
-int Program::execute(const int b, const int t, const int q, char **argv) {
+int Program::Execute(const int b, const int t, const int q, char **argv) {
     SafeStream istream, ostream;
     int s = 0;
 
-    s = istream.open_read(argv[4]);
-    if (s == 0) s = ostream.open_write(argv[5]);
+    s = istream.OpenRead(argv[4]);
+    if (s == 0) s = ostream.OpenWrite(argv[5]);
 
     if (s==0){
         std::vector<CompressorThread> threads;
@@ -20,24 +20,24 @@ int Program::execute(const int b, const int t, const int q, char **argv) {
             //I need 2 separate loops because vector 3 can reposition
             //itself and break pointers
             qs.emplace_back(CoordinatedQueue<CompressResult>());
-            qs[i].init(q);
+            qs[i].Init(q);
         }
         for (int i=0; i<t; i++){
             threads.emplace_back(CompressorThread(istream, b, qs[i]));
         }
         WriterThread wr(ostream, b, qs);
         for (int i = 0; i<t; i++){
-            threads[i].run(i, t);
+            threads[i].Run(i, t);
         }
 
-        wr.run(0, 1);
+        wr.Run(0, 1);
         for (int i = 0; i<t; i++){
-            threads[i].join();
+            threads[i].Join();
         }
-        wr.join();
+        wr.Join();
 
-        istream.close();
-        ostream.close();
+        istream.Close();
+        ostream.Close();
     }
     return  s;
 }

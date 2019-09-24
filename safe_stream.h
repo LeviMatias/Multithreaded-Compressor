@@ -28,35 +28,36 @@ class SafeStream {
     //PRE attemps to open the specified istream
     //POS 0 if successful
     //if there already was an ifile open, it closes it
-    int open_read(const std::string& path);
+    int OpenRead(const std::string& path);
 
     //PRE attemps to open the specified ostream
     //POS 0 if successful
     //if there already was an ofile open, it closes it
-    int open_write(const std::string& path);
+    int OpenWrite(const std::string& path);
 
     //PRE reads from a previously successfully opened istream
     //starting from index position in the file
-    //POS returns number of bytes read if s, 0 if eof reached
-    unsigned int read(char* buffer, unsigned int index, size_t size);
+    //POS returns number of bytes read
+    //if EoF was reached, the number returned is multiplied by -1
+    int Read(char* buffer, unsigned int index, size_t size);
 
     //PRE writes to a previously successfully opened istream
     //POS 0 if s, 1 if not
-    int write(char* buffer, size_t size);
+    int Write(char* buffer, size_t size);
 
     //POS true if file reached end
-    bool eof();
+    bool EoF();
 
     //POS closes all opened files (if any)
-    void close();
+    void Close();
 
     //PRE a file was opened for output
     //POS closes the file
-    void close_output();
+    void CloseOutput();
 
     //PRE a file was opened for input
     //POS closes the file
-    void close_input();
+    void CloseInput();
 };
 
 

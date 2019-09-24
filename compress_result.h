@@ -31,15 +31,15 @@ class CompressResult {
     CompressResult(const CompressResult &old_obj);
 
     //POS sets the specified values to the result, packed_bytes is moved
-    void set(uint32_t reference, unsigned char bit_size,\
+    void Set(uint32_t reference, unsigned char bit_size,\
             std::vector<unsigned char> &packed_bytes);
 
     //PRE values must have been set previously
     //POS writes result to buffer (buffer may be resized)
-    void to_vector(std::vector<char> &buffer);
+    void ToVector(std::vector<char> &buffer);
 
     //POS returns size in bytes of the result
-    size_t get_size();
+    size_t GetSize();
 };
 
 

@@ -15,7 +15,7 @@ class WriterThread : public Thread {
 private:
     CoordinatedQueue<CoordinatedQueue<CompressResult>*> qs;
 
-    virtual void _run(int order, int total_threads);
+    virtual void _Run(int order, int total_threads);
 public:
     explicit WriterThread(SafeStream &istream, size_t block_size,\
                         std::vector<CoordinatedQueue<CompressResult>> &qs);

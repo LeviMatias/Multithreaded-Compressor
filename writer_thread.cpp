@@ -8,32 +8,32 @@
 WriterThread::WriterThread(SafeStream &stream, size_t block_size,\
                             std::vector<CoordinatedQueue<CompressResult>>&qs)\
                             : Thread(stream, block_size) {
-    this->qs.init(qs.size());
+    this->qs.Init(qs.size());
     for (auto & q : qs){
-        this->qs.add_element(&q);
+        this->qs.AddElement(&q);
     }
 }
 
-void WriterThread::_run(const int order, const int total_threads){
+void WriterThread::_Run(const int order, const int total_threads){
     int s = 0;
     //I can use is_empty without fear because this q is never added to again
-    while (!this->qs.is_empty()){
+    while (!this->qs.IsEmpty()){
        CoordinatedQueue<CompressResult> **q;
-       s = this->qs.get_element(q);
+       s = this->qs.GetElement(q);
        if (s == 0){
             CompressResult* res;
-            s = (*q)->get_element(res);
+            s = (*q)->GetElement(res);
             if (s==0){
                 std::vector<char> msg;
-                res->to_vector(msg);
-                this->get_stream()->write(msg.data(), msg.size());
-                (*q)->pop_element(); //remove the result from the list
-                this->qs.move_front_to_back();
+                res->ToVector(msg);
+                this->GetStream()->Write(msg.data(), msg.size());
+                (*q)->PopElement(); //remove the result from the list
+                this->qs.MoveFrontToBack();
             }
         }
        if (s != 0){
             //the queue is closed so lets remove it
-            qs.pop_element();
+           qs.PopElement();
        }
     }
 }

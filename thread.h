@@ -15,20 +15,20 @@ private:
     SafeStream* stream;
     size_t block_size;
 
-    virtual void _run(int order, int total_threads) = 0;
+    virtual void _Run(int order, int total_threads) = 0;
 
 protected:
-    SafeStream*  get_stream();
-    size_t get_blk_sz();
+    SafeStream*  GetStream();
+    size_t GetBlockSize();
 
 public:
     explicit Thread(SafeStream &stream, size_t block_size);
 
     //runs the thread with the specified id
-    void run(int order, int total_threads);
+    void Run(int order, int total_threads);
 
     //joins the thread
-    void join();
+    void Join();
 };
 
 

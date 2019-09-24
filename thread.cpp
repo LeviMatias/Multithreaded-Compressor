@@ -9,19 +9,19 @@ Thread::Thread(SafeStream &strm, const size_t blk_size){
     this->block_size = blk_size;
 }
 
-void Thread::run(const int order, const int total_threads) {
-    this->thread = std::thread(&Thread::_run, this, order, total_threads);
+void Thread::Run(const int order, const int total_threads) {
+    this->thread = std::thread(&Thread::_Run, this, order, total_threads);
 }
 
-void Thread::join() {
+void Thread::Join() {
     this->thread.join();
 }
 
-SafeStream *Thread::get_stream() {
+SafeStream *Thread::GetStream() {
     return this->stream;
 }
 
-size_t Thread::get_blk_sz() {
+size_t Thread::GetBlockSize() {
     return this->block_size;
 }
 

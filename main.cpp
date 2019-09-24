@@ -1,10 +1,10 @@
 
 #include "program.h"
 
-#define EXPECTED_ARGC 6
+#define EXPECTED_ARGC 5
 
 int main(int argc, char* argv[]) {
-    int t,q,n,s = argc!=EXPECTED_ARGC;
+    int t,q,n,s = (argc - 1)!=EXPECTED_ARGC;
 
     if (s == 0) {
         try {
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (s == 0){
-        s = Program::execute(n, t, q, argv);
+        s = Program::Execute(n, t, q, argv);
     }
 
     return s;

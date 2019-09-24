@@ -20,14 +20,14 @@ CompressResult::CompressResult(const CompressResult &old_obj) {
     this->bit_size = old_obj.bit_size;
 }
 
-void CompressResult::set(const uint32_t ref, const unsigned char bs,\
-                        std::vector<unsigned char> &pb){
-    this->reference = ref;
-    this->bit_size = bs;
-    this->packed_bytes = std::move(pb);
+void CompressResult::Set(uint32_t reference, unsigned char bit_size,\
+                        std::vector<unsigned char> &packed_bytes){
+    this->reference = reference;
+    this->bit_size = bit_size;
+    this->packed_bytes = std::move(packed_bytes);
 }
 
-void CompressResult::to_vector(std::vector<char> &buffer){
+void CompressResult::ToVector(std::vector<char> &buffer){
     buffer.resize(sizeof(this->bit_size) + sizeof(this->reference));
     int offset = sizeof(this->reference);
     std::memcpy(buffer.data(), &this->reference, offset);
@@ -37,7 +37,7 @@ void CompressResult::to_vector(std::vector<char> &buffer){
                 this->packed_bytes.end());
 }
 
-size_t CompressResult::get_size(){
+size_t CompressResult::GetSize(){
     size_t s = sizeof(this->reference);
     s += sizeof(this->bit_size);
     s += this->packed_bytes.size();

@@ -14,7 +14,7 @@ class CompressorThread : public Thread {
     private:
     CoordinatedQueue<CompressResult> *q;
 
-    virtual void _run(int id, int total_threads);
+    virtual void _Run(int id, int total_threads);
     
     public:
     explicit CompressorThread(SafeStream &strm, size_t blk_size,\

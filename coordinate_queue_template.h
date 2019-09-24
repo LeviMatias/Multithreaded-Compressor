@@ -27,15 +27,15 @@ public:
     CoordinatedQueue(const CoordinatedQueue& sq);
 
     //POS sets the max_elements of a queue
-    void init(int max_elements);
+    void Init(int max_elements);
 
     //POS sets the max_elements of a queue
     //also fills de queues with CompressResult (could use a template)
-    void init_full(int max_elements);
+    void InitFull(int max_elements);
 
     //POS: adds element to queue if enough space, otherwise yields
     //until space is made or queue is closed
-    void add_element(const T &result);
+    void AddElement(const T &result);
 
     //why use poinconst ter? its possi&ble that this function
     //fails to retrieve an element when the qs are closed and thread
@@ -46,44 +46,44 @@ public:
     //if queue is closed, returns -1
     //if successful elem points to element
     //and returns 0
-    int get_element(T* &elem);
+    int GetElement(T* &elem);
 
     //POS moves the front element to the back
-    void move_front_to_back();
+    void MoveFrontToBack();
 
-    void pop_element();
+    void PopElement();
 
     //closes the queue to signal no new elements will arrive
-    void close_queue();
+    void CloseQueue();
 
     //POS true when close_queue has been called once before
-    bool is_closed();
+    bool IsClosed();
 
-    bool is_empty();
+    bool IsEmpty();
 
-    void release();
+    void Release();
 };
 
 template <class T>
-void CoordinatedQueue<T>::init(const int max_elements) {
+void CoordinatedQueue<T>::Init(const int max_elements) {
     this->max_elements = max_elements;
     this->closed = false;
     this->queue = std::queue<T>();
 }
 
 template <class T>
-void CoordinatedQueue<T>::init_full(const int max_elements) {
-    this->init(max_elements);
+void CoordinatedQueue<T>::InitFull(const int max_elements) {
+    this->Init(max_elements);
     for (int j=0; j<max_elements; j++){
         this->queue.push(T());
     }
 }
 
 template <class T>
-void CoordinatedQueue<T>::add_element(const T& result) {
+void CoordinatedQueue<T>::AddElement(const T& result) {
     std::unique_lock<std::mutex> lock(this->m2);
     while (this->queue.size() == this->max_elements) {
-        if (is_closed()) return;
+        if (IsClosed()) return;
         this->put_cv.wait(lock);
     }
     this->queue.push(result);
@@ -92,10 +92,10 @@ void CoordinatedQueue<T>::add_element(const T& result) {
 }
 
 template <class T>
-int CoordinatedQueue<T>::get_element(T* &elem) {
+int CoordinatedQueue<T>::GetElement(T* &elem) {
     std::unique_lock<std::mutex> lock(this->m);
     while (this->queue.empty()) {
-        if (is_closed()) return 1;
+        if (IsClosed()) return 1;
         this->get_cv.wait(lock);
     }
 
@@ -105,7 +105,7 @@ int CoordinatedQueue<T>::get_element(T* &elem) {
 }
 
 template <class T>
-void CoordinatedQueue<T>::pop_element() {
+void CoordinatedQueue<T>::PopElement() {
     if (!this->queue.empty()){
         this->queue.pop();
         put_cv.notify_all();
@@ -113,24 +113,24 @@ void CoordinatedQueue<T>::pop_element() {
 }
 
 template <class T>
-void CoordinatedQueue<T>::close_queue() {
+void CoordinatedQueue<T>::CloseQueue() {
     this->closed = true;
     this->get_cv.notify_all();
     this->put_cv.notify_all();
 }
 
 template <class T>
-bool CoordinatedQueue<T>::is_closed(){
+bool CoordinatedQueue<T>::IsClosed(){
     return (this->closed);
 }
 
 template <class T>
-bool CoordinatedQueue<T>::is_empty(){
+bool CoordinatedQueue<T>::IsEmpty(){
     return this->queue.empty();
 }
 
 template <class T>
-void CoordinatedQueue<T>::release() {
+void CoordinatedQueue<T>::Release() {
     //nothing to release;
 }
 
@@ -149,7 +149,7 @@ CoordinatedQueue<T>::CoordinatedQueue() {
 }
 
 template<class T>
-void CoordinatedQueue<T>::move_front_to_back(){
+void CoordinatedQueue<T>::MoveFrontToBack(){
     T elem = this->queue.front();
     this->queue.pop();
     this->queue.push(elem);
