@@ -1,6 +1,6 @@
 # TP2-Multithreaded-Compressor
 
-/tp <B> <T> <Q> <infile> <outfile>
+"/tp <B> <T> <Q> <infile> <outfile>"
 
 Task: create a compressor console app that reads from a file with 4-byte numbers
 
