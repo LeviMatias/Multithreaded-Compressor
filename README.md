@@ -11,8 +11,8 @@ Simultaneously there must be another thread reading from such queues, also in ro
 robin, and storing the results in the outfile.
 
 Objectives:
-Implement the whole program using RAII
-Practive the use of standard library structures, specially:
+-Implement the whole program using RAII
+-Practice the use of standard library structures, specially:
 std::threads
 std::mutex
 std::conditional_variable
