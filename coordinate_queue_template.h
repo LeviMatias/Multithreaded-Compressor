@@ -46,7 +46,7 @@ public:
     //if queue is closed, returns -1
     //if successful elem points to element
     //and returns 0
-    int GetElement(T* &elem);
+    int GetElement(T &elem);
 
     //POS moves the front element to the back
     void MoveFrontToBack();
@@ -68,7 +68,6 @@ template <class T>
 void CoordinatedQueue<T>::Init(const int max_elements) {
     this->max_elements = max_elements;
     this->closed = false;
-    this->queue = std::queue<T>();
 }
 
 template <class T>
@@ -92,15 +91,15 @@ void CoordinatedQueue<T>::AddElement(const T& result) {
 }
 
 template <class T>
-int CoordinatedQueue<T>::GetElement(T* &elem) {
+int CoordinatedQueue<T>::GetElement(T &elem) {
     std::unique_lock<std::mutex> lock(this->m);
     while (this->queue.empty()) {
         if (IsClosed()) return 1;
         this->get_cv.wait(lock);
     }
 
-    elem = &(this->queue.front());
-    lock.unlock();
+    elem = (this->queue.front());
+    //lock gets released by destructor
     return 0;
 }
 

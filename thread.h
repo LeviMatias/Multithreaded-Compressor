@@ -7,6 +7,7 @@
 
 
 #include <thread>
+#include <pthread.h>
 #include "safe_stream.h"
 
 class Thread {

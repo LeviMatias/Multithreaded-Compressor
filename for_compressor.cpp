@@ -36,7 +36,7 @@ namespace {
         uint32_t v = 0;
         for (i = 0; i < source.size(); i += BYTES_PER_NUMBER) {
             int* ptr = (int*)&source[i];
-            v = ntohl(*ptr);
+            v = be32toh(*ptr);
             list.push_back(v);
         }
         for (j=block_size - list.size(); j>0; j--){
@@ -85,6 +85,6 @@ CompressResult FoRCompressor::Compress(std::vector<char>\
     size_t bit_size = find_bits_to_represent_n(nums);
     std::vector<unsigned char> packed_bytes = pack(nums, bit_size);
     CompressResult r;
-    r.Set(htonl(reference), bit_size, packed_bytes);
+    r.Set(htobe32(reference), bit_size, packed_bytes);
     return r;
 }

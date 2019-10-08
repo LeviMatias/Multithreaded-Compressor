@@ -14,15 +14,10 @@ int Program::Execute(const int b, const int t, const int q, char **argv) {
 
     if (s==0){
         std::vector<CompressorThread> threads;
-        std::vector<CoordinatedQueue<CompressResult>> qs;
+        std::vector<CoordinatedQueue<CompressResult>> qs(t);
 
         for (int i=0; i<t; i++){
-            //I need 2 separate loops because vector 3 can reposition
-            //itself and break pointers
-            qs.emplace_back(CoordinatedQueue<CompressResult>());
             qs[i].Init(q);
-        }
-        for (int i=0; i<t; i++){
             threads.emplace_back(CompressorThread(istream, b, qs[i]));
         }
         WriterThread wr(ostream, b, qs);

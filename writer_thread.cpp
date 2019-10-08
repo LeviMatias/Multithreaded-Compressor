@@ -18,16 +18,16 @@ void WriterThread::_Run(const int order, const int total_threads){
     int s = 0;
     //I can use is_empty without fear because this q is never added to again
     while (!this->qs.IsEmpty()){
-       CoordinatedQueue<CompressResult> **q;
+       CoordinatedQueue<CompressResult> *q;
        s = this->qs.GetElement(q);
        if (s == 0){
-            CompressResult* res;
-            s = (*q)->GetElement(res);
+            CompressResult res;
+            s = (q)->GetElement(res);
             if (s==0){
                 std::vector<char> msg;
-                res->ToVector(msg);
+                res.ToVector(msg);
                 this->GetStream()->Write(msg.data(), msg.size());
-                (*q)->PopElement(); //remove the result from the list
+                (q)->PopElement(); //remove the result from the list
                 this->qs.MoveFrontToBack();
             }
         }

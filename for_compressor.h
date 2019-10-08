@@ -5,8 +5,7 @@
 #ifndef TP1_PROJECT_FOR_COMPRESSOR_H
 #define TP1_PROJECT_FOR_COMPRESSOR_H
 
-#include <arpa/inet.h>
-//#include <winsock2.h>
+#include <endian.h>
 #include <vector>
 #include <list>
 #include <math.h>
